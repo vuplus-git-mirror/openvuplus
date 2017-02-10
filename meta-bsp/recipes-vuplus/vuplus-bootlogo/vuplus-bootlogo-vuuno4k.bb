@@ -2,8 +2,8 @@ require vuplus-bootlogo.inc
 
 COMPATIBLE_MACHINE = "^(vuuno4k)$"
 
-PR = "${INC_PR}.2"
-SRCDATE = "20170112"
+PR = "${INC_PR}.3"
+SRCDATE = "20170209"
 
 SRC_URI += "\
 	http://archive.vuplus.com/download/kernel/vmlinuz-initrd_${MACHINE}_${SRCDATE}.tar.gz \
@@ -15,5 +15,5 @@ do_install_append() {
 	install -m 0755 ${S}/splash_auto.bin ${D}/boot/splash_auto.bin
 }
 
-SRC_URI[md5sum] = "f54c8fec94279a4752b2104423e69c82"
-SRC_URI[sha256sum] = "e231a804420d2cb8bf387f5044c9f450abfb2a6ffe6f561400732ddd761d219f"
+SRC_URI[md5sum] = "2b972c86995ad48212a25386966658a4"
+SRC_URI[sha256sum] = "c383a7f67d05655c54822b1f7a89e54601831efdb530ecb6b903320e9539e9fa"
