@@ -7,6 +7,7 @@ PR .= "-vuplus1_${GFXPR}"
 SRC_URI += " \
 	file://vuplus-conf.patch \
 	file://vuplus-prevent-VT.patch \
+	file://disable_linux_input_patch.diff \
 	http://archive.vuplus.com/download/build_support/vuplus/${GFX_FILE};name=gfxdriver \
 "
 
