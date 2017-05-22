@@ -1,4 +1,4 @@
-require kodi.inc
+require kodi-16.x.inc
 
 COMPATIBLE_MACHINE = "^(vusolo2)$"
 

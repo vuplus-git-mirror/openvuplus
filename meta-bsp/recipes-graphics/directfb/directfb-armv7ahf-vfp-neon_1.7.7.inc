@@ -2,11 +2,12 @@ require directfb-${MACHINE}.inc
 
 GFX_FILE = "directfb_1.7-7_gfxdriver_${MACHINE}_${GFXPR}.tar.gz"
 
-PR .= "-vuplus1_${GFXPR}"
+PR .= "-vuplus2_${GFXPR}"
 
 SRC_URI += " \
 	file://vuplus-conf.patch \
 	file://vuplus-prevent-VT.patch \
+	file://disable_linux_input_patch.diff \
 	http://archive.vuplus.com/download/build_support/vuplus/${GFX_FILE};name=gfxdriver \
 "
 

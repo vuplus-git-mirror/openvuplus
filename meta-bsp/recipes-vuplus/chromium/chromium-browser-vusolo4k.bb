@@ -1,8 +1,8 @@
-SRCDATE = "20161117_r0"
+SRCDATE = "20170406_r0"
 
 require chromium-browser.inc
 
 COMPATIBLE_MACHINE = "^(vusolo4k)$"
 
-SRC_URI[md5sum] = "4fdbcb2ea2b8590e76533f8bcf7f1d19"
-SRC_URI[sha256sum] = "6b852b1a57201bcd84423e15d36039ffc1eb45c99627f191ed92367c05bb1288"
+SRC_URI[md5sum] = "a244f461ef6f91343949c8174de1cf9f"
+SRC_URI[sha256sum] = "5d3b9f29ae6a2e7cbdddb0f04b1fd771ed5a19ccc121af2a2d01cd9893beb461"
