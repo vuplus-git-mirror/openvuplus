@@ -3,7 +3,7 @@ DESCRIPTION = "Vuplus bluetooth plugin"
 LICENSE = "CLOSED"
 
 DEPENDS = "python-native"
-RDEPENDS_${PN} = "vuplus-bluetooth-util"
+RDEPENDS_${PN} = "vuplus-bluetooth-util libusb-compat"
 
 SRCDATE="20170523"
 SRCDATE_PR = "r1"
