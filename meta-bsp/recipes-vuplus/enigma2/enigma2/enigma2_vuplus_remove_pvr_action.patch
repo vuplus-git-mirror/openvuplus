@@ -1,5 +1,5 @@
 diff --git a/RecordTimer.py b/RecordTimer.py
-index d3ccd75..838b18a 100755
+index 58ef5b3..d3c0bbf 100755
 --- a/RecordTimer.py
 +++ b/RecordTimer.py
 @@ -4,6 +4,7 @@ from enigma import eEPGCache, getBestPlayableServiceReference, \
@@ -22,7 +22,7 @@ index d3ccd75..838b18a 100755
  		self.afterEvent = afterEvent
  		self.dirname = dirname
  		self.dirnameHadToFallback = False
-@@ -404,7 +408,10 @@ def createTimer(xml):
+@@ -417,7 +421,10 @@ def createTimer(xml):
  	description = xml.get("description").encode("utf-8")
  	repeated = xml.get("repeated").encode("utf-8")
  	disabled = long(xml.get("disabled") or "0")
@@ -34,7 +34,7 @@ index d3ccd75..838b18a 100755
  	afterevent = str(xml.get("afterevent") or "nothing")
  	afterevent = {
  		"nothing": AFTEREVENT.NONE,
-@@ -590,7 +597,10 @@ class RecordTimer(timer.Timer):
+@@ -603,7 +610,10 @@ class RecordTimer(timer.Timer):
  			if timer.tags is not None:
  				list.append(' tags="' + str(stringToXML(' '.join(timer.tags))) + '"')
  			list.append(' disabled="' + str(int(timer.disabled)) + '"')
@@ -47,7 +47,7 @@ index d3ccd75..838b18a 100755
  			
  			if config.recording.debug.value:
 diff --git a/data/menu.xml b/data/menu.xml
-index 5c8cbb2..ed0b415 100755
+index a71c036..0340a8c 100755
 --- a/data/menu.xml
 +++ b/data/menu.xml
 @@ -71,7 +71,7 @@
@@ -60,7 +60,7 @@ index 5c8cbb2..ed0b415 100755
  			<item weight="10" level="1" text="Common Interface" entryID="ci_setup" requires="CommonInterface"><screen module="Ci" screen="CiSelection" /></item>
  			<item weight="15" level="0" text="Parental control" entryID="parental_setup"><screen module="ParentalControlSetup" screen="ParentalControlSetup" /></item>
 diff --git a/data/setup.xml b/data/setup.xml
-index 5ce6b62..9892f34 100755
+index 8e42c57..99b0a92 100755
 --- a/data/setup.xml
 +++ b/data/setup.xml
 @@ -22,11 +22,11 @@
@@ -81,27 +81,17 @@ index 5ce6b62..9892f34 100755
  			<item level="1" text="Show positioner movement">config.usage.showdish</item>
  			<item level="1" text="Enable multiple bouquets">config.usage.multibouquet</item>
 diff --git a/lib/python/Components/SystemInfo.py b/lib/python/Components/SystemInfo.py
-old mode 100644
-new mode 100755
-index 67f2e75..9ecd94d
+index 6fcab1d..85f7f64 100755
 --- a/lib/python/Components/SystemInfo.py
 +++ b/lib/python/Components/SystemInfo.py
-@@ -1,6 +1,6 @@
- from enigma import eDVBResourceManager
- from Tools.Directories import fileExists
--from Tools.HardwareInfo import HardwareInfo
-+from Tools.HardwareInfo import HardwareInfo, HardwareInfo
- 
- SystemInfo = { }
- 
-@@ -31,4 +31,5 @@ SystemInfo["FrontpanelDisplayGrayscale"] = fileExists("/dev/dbox/oled0")
- SystemInfo["DeepstandbySupport"] = HardwareInfo().get_device_name() != "dm800"
+@@ -32,4 +32,4 @@ SystemInfo["DeepstandbySupport"] = HardwareInfo().get_device_name() != "dm800"
  SystemInfo["HdmiInSupport"] = HardwareInfo().get_vu_device_name() == "ultimo4k"
  SystemInfo["WOWLSupport"] = HardwareInfo().get_vu_device_name() == "ultimo4k"
+ SystemInfo["ScrambledPlayback"] = HardwareInfo().get_vu_device_name() in ("solo4k", "ultimo4k")
+-
 +SystemInfo["PVRSupport"] = HardwareInfo().get_vu_device_name() not in ["solose", "zero", "uno4k"]
- 
 diff --git a/lib/python/Screens/InfoBarGenerics.py b/lib/python/Screens/InfoBarGenerics.py
-index b5bd06d..bc2b8a9 100755
+index cebebf5..89e146e 100755
 --- a/lib/python/Screens/InfoBarGenerics.py
 +++ b/lib/python/Screens/InfoBarGenerics.py
 @@ -235,7 +235,7 @@ class InfoBarNumberZap:
@@ -113,7 +103,7 @@ index b5bd06d..bc2b8a9 100755
  				self.session.openWithCallback(self.numberEntered, NumberZap, number)
  
  	def numberEntered(self, retval):
-@@ -1185,11 +1185,12 @@ class InfoBarShowMovies:
+@@ -1201,11 +1201,12 @@ class InfoBarShowMovies:
  
  class InfoBarTimeshift:
  	def __init__(self):
@@ -131,7 +121,7 @@ index b5bd06d..bc2b8a9 100755
  		self["TimeshiftActivateActions"] = ActionMap(["InfobarTimeshiftActivateActions"],
  			{
  				"timeshiftActivateEnd": self.activateTimeshiftEnd, # something like "rewind key"
-@@ -1509,10 +1510,11 @@ class InfoBarInstantRecord:
+@@ -1529,10 +1530,11 @@ class InfoBarInstantRecord:
  	"""Instant Record - handles the instantRecord action in order to
  	start/stop instant records"""
  	def __init__(self):
@@ -148,7 +138,7 @@ index b5bd06d..bc2b8a9 100755
  
  	def stopCurrentRecording(self, entry = -1):
 diff --git a/lib/python/Screens/TimerEntry.py b/lib/python/Screens/TimerEntry.py
-index 9885e70..1d40547 100644
+index c3e71c7..5ee9e41 100644
 --- a/lib/python/Screens/TimerEntry.py
 +++ b/lib/python/Screens/TimerEntry.py
 @@ -94,7 +94,12 @@ class TimerEntry(Screen, ConfigListScreen):
@@ -163,5 +153,5 @@ index 9885e70..1d40547 100644
 +				default = {0: "record", 1: "zap"}[justplay]
 +			self.timerentry_justplay = ConfigSelection(choices = timer_choices, default = default)
  			if SystemInfo["DeepstandbySupport"]:
- 				shutdownString = _("go to deep standby")
+ 				shutdownString = _("go to standby")
  			else:

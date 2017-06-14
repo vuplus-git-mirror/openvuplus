@@ -28,21 +28,18 @@ SRC_URI_append_vuzero = " \
 SRC_URI_append_vusolo4k = " \
 	file://skin_user_vusolo4k.xml \
 	file://lcd_icons_vusolo4k \
-	file://enigma2_dvb_ci_fbc.patch \
 	file://vu_hd_1080p_default.patch \
 "
 
 SRC_URI_append_vuultimo4k = " \
 	file://skin_user_vuultimo4k.xml \
 	file://lcd_icons_vuultimo4k \
-	file://enigma2_dvb_ci_fbc.patch \
 	file://vu_hd_1080p_default.patch \
 	file://enigma2_network_sys0.patch \
 "
 
 SRC_URI_append_vuuno4k = " \
 	file://enigma2_vuplus_remove_pvr_action.patch \
-	file://enigma2_dvb_ci_fbc.patch \
 	file://vu_hd_1080p_default.patch \
 "
 
