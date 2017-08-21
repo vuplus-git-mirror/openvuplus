@@ -11,7 +11,7 @@ SRCREV="c8fc96e8e51e1ef71e1709f9dd6f733007f9463e"
 SRCDATE="20110215"
 BRANCH="master"
 PV = "experimental-git${SRCDATE}"
-PR = "r13"
+PR = "r14"
 
 FILESEXTRAPATHS_prepend := "${THISDIR}/${PN}:"
 
@@ -40,6 +40,7 @@ SRC_URI_append_vuplus = " \
 	file://dreamboxwebtv.png \
 	file://favicon.ico \
 	file://Makefile.am \
+	file://enigma2_plugins_setqpipmode.patch \
 "
 
 FILES_${PN} += " /usr/share/enigma2 /usr/share/fonts "

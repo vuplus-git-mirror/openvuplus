@@ -81,15 +81,15 @@ index 8e42c57..99b0a92 100755
  			<item level="1" text="Show positioner movement">config.usage.showdish</item>
  			<item level="1" text="Enable multiple bouquets">config.usage.multibouquet</item>
 diff --git a/lib/python/Components/SystemInfo.py b/lib/python/Components/SystemInfo.py
-index 6fcab1d..85f7f64 100755
+index a1f0d6f..b7d7119 100755
 --- a/lib/python/Components/SystemInfo.py
 +++ b/lib/python/Components/SystemInfo.py
-@@ -32,4 +32,4 @@ SystemInfo["DeepstandbySupport"] = HardwareInfo().get_device_name() != "dm800"
- SystemInfo["HdmiInSupport"] = HardwareInfo().get_vu_device_name() == "ultimo4k"
- SystemInfo["WOWLSupport"] = HardwareInfo().get_vu_device_name() == "ultimo4k"
+@@ -34,4 +34,5 @@ SystemInfo["WOWLSupport"] = HardwareInfo().get_vu_device_name() == "ultimo4k"
  SystemInfo["ScrambledPlayback"] = HardwareInfo().get_vu_device_name() in ("solo4k", "ultimo4k")
--
+ SystemInfo["FastChannelChange"] =  fileExists("/proc/stb/frontend/fbc/fcc")
+ SystemInfo["MiniTV"] = fileExists("/proc/stb/lcd/live_enable")
 +SystemInfo["PVRSupport"] = HardwareInfo().get_vu_device_name() not in ["solose", "zero", "uno4k"]
+ 
 diff --git a/lib/python/Screens/InfoBarGenerics.py b/lib/python/Screens/InfoBarGenerics.py
 index cebebf5..89e146e 100755
 --- a/lib/python/Screens/InfoBarGenerics.py

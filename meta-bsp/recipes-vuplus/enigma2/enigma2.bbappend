@@ -1,6 +1,6 @@
 FILESEXTRAPATHS_prepend := "${THISDIR}/${PN}:"
 
-PR .= "-bsp12"
+PR .= "-bsp13"
 
 SRC_URI_append_vusolo = " \
 	file://enigma2_vuplus_misc.patch \

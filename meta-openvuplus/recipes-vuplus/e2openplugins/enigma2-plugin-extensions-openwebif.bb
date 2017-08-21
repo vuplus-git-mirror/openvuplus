@@ -12,11 +12,12 @@ SRCREV_pn-${PN}="d84307958746e6a597b43defe5bd1cb78fd745c8"
 inherit gitpkgv
 PV = "1+git${SRCPV}"
 PKGV = "1+git${GITPKGV}"
-PR = "r3"
+PR = "r4"
 
 require openplugins-distutils.inc
 
 SRC_URI += " file://openwebif_solo4k.patch;striplevel=1 "
+SRC_URI += " file://openwebif_block_in_qpip.patch"
 
 # Just a quick hack to "compile" it
 do_compile() {

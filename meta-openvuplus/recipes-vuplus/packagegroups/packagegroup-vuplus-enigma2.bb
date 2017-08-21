@@ -2,7 +2,7 @@ SUMMARY = "Enigma2 set of packages for Vuplus"
 SECTION = "vuplus/base"
 LICENSE = "GPLv2"
 LIC_FILES_CHKSUM = "file://${COREBASE}/meta/files/common-licenses/GPL-2.0;md5=801f80980d171dd6425610833a22dbe6"
-PR = "r20"
+PR = "r21"
 
 PACKAGE_ARCH = "${MACHINE_ARCH}"
 
@@ -80,6 +80,7 @@ RDEPENDS_${PN} += " \
   ${@base_contains("VUPLUS_FEATURES", "bluetooth", "enigma2-plugin-extensions-witaispeechtotext", "", d)} \
   ${@base_conditional("MACHINE", "vuultimo4k", "enigma2-plugin-systemplugins-ultimo4kmisccontrol", "", d)} \
   ${@base_contains("VUPLUS_FEATURES", "scrambledplayback", "enigma2-plugin-systemplugins-pvrdescrambleconvert", "", d)} \
+  ${@base_contains("VUPLUS_FEATURES", "quadpip", "enigma2-plugin-extensions-quadpip", "", d)} \
 "
 
 PACKAGE_ARCH = "${MACHINE_ARCH}"
