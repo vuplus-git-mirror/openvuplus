@@ -2,5 +2,5 @@ SRCDATE = "20170905"
 SRCDATE_PR = "r1"
 
 
-SRC_URI[md5sum] = "f7f24d9a381ac39e9f659cdfd331a32c"
-SRC_URI[sha256sum] = "c52c1d2b62bc0e3e5907e2af5b1c6cb0fdf1c8908d127ccdc0fef3dd9d3347e0"
+SRC_URI[md5sum] = "e424f0fceabdb765dd4fb2a7e7c28cb3"
+SRC_URI[sha256sum] = "5da43685aff25dcd6636a85ae688c66ceb0502d6cf4045b89819910f10757f42"
