@@ -9,6 +9,8 @@ RDEPENDS_${PN} = "vuplus-bluetooth-util libusb-compat"
 PROVIDES += "enigma2-plugin-systemplugins-bluetoothsetup"
 RPROVIDES_${PN} += "enigma2-plugin-systemplugins-bluetoothsetup"
 
+RREPLACES_${PN} = "enigma2-plugin-systemplugins-bluetoothsetup"
+
 PR="${SRCDATE}.${SRCDATE_PR}"
 
 SRC_URI = " \
