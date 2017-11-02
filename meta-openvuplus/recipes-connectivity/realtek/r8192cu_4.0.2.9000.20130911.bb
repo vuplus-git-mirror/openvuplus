@@ -7,6 +7,7 @@ LIC_FILES_CHKSUM = "file://os_dep/linux/os_intfs.c;endline=19;md5=72c75de415f1e8
 SRC_URI = " \
         file://rtl8188C_8192C_usb_linux_v4.0.2_9000.20130911.tar.gz \
 	file://r8192cu_remove_debug.patch \
+	file://strnicmp_error_patch.diff \
 "
 
 S = "${WORKDIR}/rtl8188C_8192C_usb_linux_v4.0.2_9000.20130911"

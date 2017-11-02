@@ -12,10 +12,10 @@ RPROVIDES_${PN} += "kodi"
 
 BRANCH = "Krypton"
 PV = "17.0"
-PR = "r0"
+PR = "r1"
 
 SRC_URI = " \
-	https://github.com/xbmc/xbmc/archive/${PV}-Krypton.tar.gz;name=Src \
+	http://archive.vuplus.com/download/build_support/kodi/kodi-${PV}-Krypton.tar.gz;name=Src \
 	http://archive.vuplus.com/download/build_support/kodi/xbmc-${PV}-Util.tar.gz;name=Util \
 	file://xbmc-${PV}-vuplus-patch.diff \
 	"

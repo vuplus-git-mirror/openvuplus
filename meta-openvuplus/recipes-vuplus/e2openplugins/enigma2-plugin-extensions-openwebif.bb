@@ -12,11 +12,11 @@ SRCREV_pn-${PN}="d84307958746e6a597b43defe5bd1cb78fd745c8"
 inherit gitpkgv
 PV = "1+git${SRCPV}"
 PKGV = "1+git${GITPKGV}"
-PR = "r4"
+PR = "r5"
 
 require openplugins-distutils.inc
 
-SRC_URI += " file://openwebif_solo4k.patch;striplevel=1 "
+SRC_URI += " file://openwebif_support_vumodels.patch"
 SRC_URI += " file://openwebif_block_in_qpip.patch"
 
 # Just a quick hack to "compile" it
@@ -43,6 +43,7 @@ python do_package_prepend () {
   ('vuuno', 'uno.jpg', 'vu_normal.png'),
   ('vuultimo4k', 'unknown.jpg', 'vu_normal.png'),
   ('vuuno4k', 'unknown.jpg', 'vu_normal.png'),
+  ('vuuno4kse', 'unknown.jpg', 'vu_normal.png'),
   ]
   import os
   top = '${D}${PLUGINPATH}/public/images/'
