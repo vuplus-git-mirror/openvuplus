@@ -1,8 +1,8 @@
 diff --git a/RecordTimer.py b/RecordTimer.py
-index d3ccd75..e1c9c58 100755
+index 32fb923..58ef5b3 100755
 --- a/RecordTimer.py
 +++ b/RecordTimer.py
-@@ -297,7 +297,7 @@ class RecordTimerEntry(timer.TimerEntry, object):
+@@ -307,7 +307,7 @@ class RecordTimerEntry(timer.TimerEntry, object):
  				self.record_service = None
  			if self.afterEvent == AFTEREVENT.STANDBY:
  				if not Screens.Standby.inStandby: # not already in standby
@@ -34,10 +34,10 @@ index a6f39ef..bb12b6d 100755
  					self.standby(True)
  
 diff --git a/data/menu.xml b/data/menu.xml
-index 03e582c..ccdd6d3 100755
+index 5c8cbb2..a71c036 100755
 --- a/data/menu.xml
 +++ b/data/menu.xml
-@@ -96,10 +96,10 @@ self.session.openWithCallback(msgClosed, FactoryReset)
+@@ -97,10 +97,10 @@ self.session.openWithCallback(msgClosed, FactoryReset)
  			<id val="shutdown" />
  			<!--<item text="Standby"><code>quitMainloop(0)</code></item>-->
  			<item text="Sleep Timer" entryID="sleep"><screen module="SleepTimerEdit" screen="SleepTimerEdit" /></item>
@@ -51,11 +51,11 @@ index 03e582c..ccdd6d3 100755
  		</menu>
  </menu>
 diff --git a/data/setup.xml b/data/setup.xml
-index 442fe13..719e94a 100755
+index 9613440..8e42c57 100755
 --- a/data/setup.xml
 +++ b/data/setup.xml
-@@ -63,7 +63,7 @@
- 			<item level="2" text="Composition of the recording filenames">config.recording.filename_composition</item>
+@@ -86,7 +86,7 @@
+ 			<item level="2" text="Automatically turn on external subtitles" description="When enabled, external subtitles will be always turned on for playback movie.">config.subtitles.pango_autoturnon</item>
  		</setup>
  		<setup key="harddisk" title="Harddisk setup" >
 -			<item level="0" text="Harddisk standby after">config.usage.hdd_standby</item>
@@ -63,7 +63,7 @@ index 442fe13..719e94a 100755
  		</setup>
  		<setup key="network" title="Network setup">
  			<item text="Use DHCP">config.network.dhcp</item>
-@@ -93,7 +93,7 @@
+@@ -116,7 +116,7 @@
  		<setup key="lcd" title="Display Setup" requires="FrontpanelDisplay">
  			<item level="0" text="Brightness">config.lcd.bright</item>
  			<item level="0" text="Contrast">config.lcd.contrast</item>
@@ -88,9 +88,7 @@ index 0ea65cd..2baadf9 100644
  	config.ParentalControl.setuppinactive = ConfigYesNo(default = False)
  	config.ParentalControl.type = ConfigSelection(default = "blacklist", choices = [(LIST_WHITELIST, _("whitelist")), (LIST_BLACKLIST, _("blacklist"))])
 diff --git a/lib/python/Components/UsageConfig.py b/lib/python/Components/UsageConfig.py
-old mode 100644
-new mode 100755
-index b98be60..a00132d
+index d262448..26eac19 100644
 --- a/lib/python/Components/UsageConfig.py
 +++ b/lib/python/Components/UsageConfig.py
 @@ -23,7 +23,7 @@ def InitUsageConfig():
@@ -118,18 +116,18 @@ index b98be60..a00132d
  
  	config.usage.alternatives_priority = ConfigSelection(default = "0", choices = [
 diff --git a/lib/python/Plugins/SystemPlugins/DeviceManager/plugin.py b/lib/python/Plugins/SystemPlugins/DeviceManager/plugin.py
-index 86aa991..e702068 100755
+index 5922fde..06dbd74 100755
 --- a/lib/python/Plugins/SystemPlugins/DeviceManager/plugin.py
 +++ b/lib/python/Plugins/SystemPlugins/DeviceManager/plugin.py
-@@ -85,7 +85,7 @@ class DeviceManagerConfiguration(Screen, ConfigListScreen):
+@@ -84,7 +84,7 @@ class DeviceManagerConfiguration(Screen, ConfigListScreen):
  	def createConfigList(self):
  		self.list = []
  		self.list.append(getConfigListEntry(_("Enable mount check for HDD : "), config.plugins.devicemanager.mountcheck_enable))
 -		self.list.append(getConfigListEntry(_("Harddisk standby after : "), config.usage.hdd_standby))
 +		self.list.append(getConfigListEntry(_("Harddisk idle mode after : "), config.usage.hdd_standby))
- 		self.list.append(getConfigListEntry(_("Mount known devices automatically : "), config.plugins.devicemanager.hotplug_enable))
  
- 	def keySave(self):
+ class DeviceManager(Screen):
+ 	skin = """
 diff --git a/lib/python/Plugins/SystemPlugins/Fancontrol/meta/plugin_fancontrol.xml b/lib/python/Plugins/SystemPlugins/Fancontrol/meta/plugin_fancontrol.xml
 index b766e34..f208ec0 100644
 --- a/lib/python/Plugins/SystemPlugins/Fancontrol/meta/plugin_fancontrol.xml
@@ -159,7 +157,7 @@ index d28fe8e..c90b6cd 100644
  			<ePixmap pixmap="skin_default/buttons/green.png" position="310,10" size="140,40" alphatest="on" />
  
 diff --git a/lib/python/Plugins/SystemPlugins/HDMICEC/components/HdmiCec.py b/lib/python/Plugins/SystemPlugins/HDMICEC/components/HdmiCec.py
-index e73d9a2..8deddf1 100755
+index bd93f4d..826c1b1 100755
 --- a/lib/python/Plugins/SystemPlugins/HDMICEC/components/HdmiCec.py
 +++ b/lib/python/Plugins/SystemPlugins/HDMICEC/components/HdmiCec.py
 @@ -46,8 +46,8 @@ class HdmiCec:
@@ -269,10 +267,10 @@ index 48f871f..d2588ec 100644
  		ConfigListScreen.__init__(self, self.list, session = self.session)
  		#self["config"].list = self.list
 diff --git a/lib/python/Plugins/SystemPlugins/WOLSetup/plugin.py b/lib/python/Plugins/SystemPlugins/WOLSetup/plugin.py
-index bf29218..1acc43d 100644
+index 6d285fd..956b108 100644
 --- a/lib/python/Plugins/SystemPlugins/WOLSetup/plugin.py
 +++ b/lib/python/Plugins/SystemPlugins/WOLSetup/plugin.py
-@@ -27,7 +27,7 @@ _ethDevice = "eth0"
+@@ -31,7 +31,7 @@ if SystemInfo.get("WOWLSupport", False):
  
  config.plugins.wolconfig = ConfigSubsection()
  config.plugins.wolconfig.activate = ConfigYesNo(default = False)
@@ -281,7 +279,7 @@ index bf29218..1acc43d 100644
  
  import socket
  class NetTool:
-@@ -189,7 +189,7 @@ def MenuSelected(selected, **kwargs):
+@@ -199,7 +199,7 @@ def MenuSelected(selected, **kwargs):
  	if selected == "system":
  		return [(_("WakeOnLan Setup"), PluginMain, "wolconfig", 80)]
  	if selected == "shutdown" and config.plugins.wolconfig.activate.value and config.plugins.wolconfig.location.value == "menu":
@@ -291,7 +289,7 @@ index bf29218..1acc43d 100644
  
  def Plugins(**kwargs):
 diff --git a/lib/python/Screens/SleepTimerEdit.py b/lib/python/Screens/SleepTimerEdit.py
-index 1305b62..9f30c2d 100755
+index 4945df8..bbc8365 100755
 --- a/lib/python/Screens/SleepTimerEdit.py
 +++ b/lib/python/Screens/SleepTimerEdit.py
 @@ -79,12 +79,12 @@ class SleepTimerEdit(Screen):
@@ -353,7 +351,7 @@ index 9885e70..c3e71c7 100644
  			self.timerentry_name = ConfigText(default = self.timer.name, visible_width = 50, fixed_size = False)
  			self.timerentry_description = ConfigText(default = self.timer.description, visible_width = 50, fixed_size = False)
 diff --git a/po/en.po b/po/en.po
-index 6937349..4ce5bad 100755
+index 5acb840..6aa7f7b 100644
 --- a/po/en.po
 +++ b/po/en.po
 @@ -445,6 +445,14 @@ msgstr ""
@@ -369,7 +367,7 @@ index 6937349..4ce5bad 100755
 +#
 +msgid ""
  "A finished record timer wants to shut down\n"
- "your Dreambox. Shutdown now?"
+ "your STB. Shutdown now?"
  msgstr ""
 @@ -549,6 +557,22 @@ msgstr ""
  
@@ -392,7 +390,7 @@ index 6937349..4ce5bad 100755
 +#
 +msgid ""
  "A sleep timer wants to shut down\n"
- "your Dreambox. Shutdown now?"
+ "your STB. Shutdown now?"
  msgstr ""
 @@ -3392,6 +3416,21 @@ msgstr "ISO path"
  msgid "Icelandic"

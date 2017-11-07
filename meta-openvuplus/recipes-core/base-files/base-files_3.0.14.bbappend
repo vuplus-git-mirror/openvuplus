@@ -1,4 +1,4 @@
-PR .= "-vuplus3"
+PR .= "-vuplus4"
 
 do_install_append() {
 	rm -rf ${D}/hdd
@@ -9,6 +9,7 @@ do_install_append() {
         ln -sf var/run ${D}/run
 
         install -m 0755 -d ${D}/media/net
+        install -m 0755 -d ${D}/media/hdd
 }
 
 FILESEXTRAPATHS_prepend := "${THISDIR}/${PN}:"
