@@ -7,7 +7,7 @@ index 446a97c..8e0e0f6 100644
  
  	info['transcoding'] = False
 -	if (info['model'] in ("Solo²", "Duo²", "Solo SE", "Quad", "Quad Plus") or info['machinebuild'] in ('inihdp', 'hd2400', 'et10000', 'xpeedlx3', 'ew7356', 'dags3', 'dags4')):
-+	if (info['model'] in ("Uno4K", "Ultimo4K", "Solo4K", "Solo²", "Duo²", "Solo SE", "Quad", "Quad Plus") or info['machinebuild'] in ('inihdp', 'hd2400', 'et10000', 'xpeedlx3', 'ew7356', 'dags3', 'dags4')):
++	if (info['model'] in ("Uno4Kse", "Uno4K", "Ultimo4K", "Solo4K", "Solo²", "Duo²", "Solo SE", "Quad", "Quad Plus") or info['machinebuild'] in ('inihdp', 'hd2400', 'et10000', 'xpeedlx3', 'ew7356', 'dags3', 'dags4')):
  		if os.path.exists(eEnv.resolve('${libdir}/enigma2/python/Plugins/SystemPlugins/TransCodingSetup/plugin.pyo')) or os.path.exists(eEnv.resolve('${libdir}/enigma2/python/Plugins/SystemPlugins/TranscodingSetup/plugin.pyo')) or os.path.exists(eEnv.resolve('${libdir}/enigma2/python/Plugins/SystemPlugins/MultiTransCodingSetup/plugin.pyo')):
  			info['transcoding'] = True
  
@@ -20,7 +20,7 @@ index cb33277..d75ca6f 100644
  	transcoder_port = None
  	args = ""
 -	if model in ("Solo²", "Duo²", "Solo SE", "Quad", "Quad Plus") or machinebuild in ('dags3', 'dags4'):
-+	if model in ("Uno4K", "Ultimo4K", "Solo4K", "Solo²", "Duo²", "Solo SE", "Quad", "Quad Plus") or machinebuild in ('dags3', 'dags4'):
++	if model in ("Uno4Kse", "Uno4K", "Ultimo4K", "Solo4K", "Solo²", "Duo²", "Solo SE", "Quad", "Quad Plus") or machinebuild in ('dags3', 'dags4'):
  		try:
  			transcoder_port = int(config.plugins.transcodingsetup.port.value)
  		except StandardError:

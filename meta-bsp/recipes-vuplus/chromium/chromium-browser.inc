@@ -4,15 +4,15 @@ PRIORITY = "required"
 LICENSE = "CLOSED"
 require conf/license/license-close.inc
 
-PV = "1.0"
+PV = "1.1"
 PR = "${SRCDATE}"
 SRC_URI = "http://code.vuplus.com/download/chromium/chromium-vuplus_${MACHINE}_${SRCDATE}.tar.gz"
 
 # Added to support the OE-Alliance.
 PREFERRED_VERSION_nss = "3.17.3"
 
-DEPENDS_${PN} = "nss"
-RDEPENDS_${PN} = "nspr nss"
+DEPENDS_${PN} = "nss python-subprocess libxslt"
+RDEPENDS_${PN} = "nspr nss python-subprocess libxslt"
 
 do_install() {
 	install -d ${D}/usr/local/chromium

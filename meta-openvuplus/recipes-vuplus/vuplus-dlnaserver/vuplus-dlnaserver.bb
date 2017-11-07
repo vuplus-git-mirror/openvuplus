@@ -3,7 +3,7 @@ MAINTAINER = "vuplus team"
 LICENSE = "CLOSED"
 require conf/license/license-close.inc
 
-PV = "1.1"
+PV = "1.2"
 PR = "r1"
 
 SRC_URI = "http://archive.vuplus.com/download/utils/vuplus-dlnaserver-${PV}.tar.gz"
@@ -24,6 +24,6 @@ FILES_${PN} = "/"
 do_populate_sysroot[noexec] = "1"
 INSANE_SKIP_${PN} = "already-stripped"
 
-SRC_URI[md5sum] = "6b07e98fe748e85cd846e37449bf8d90"
-SRC_URI[sha256sum] = "26576e1723187fd7c0fed134dae9b6f1a109c9651bc5a0ec974234a0189d5f32"
+SRC_URI[md5sum] = "215a700d00172a1637c2e9269b1c54ca"
+SRC_URI[sha256sum] = "a73d83303b09fab93e53108fd93c8cfaa9011d3e3e564804d319e351ba1df985"
 

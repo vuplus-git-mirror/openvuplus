@@ -1,6 +1,6 @@
 FILESEXTRAPATHS_prepend := "${THISDIR}/${PN}:"
 
-PR .= "-bsp13"
+PR .= "-bsp21"
 
 SRC_URI_append_vusolo = " \
 	file://enigma2_vuplus_misc.patch \
@@ -41,6 +41,15 @@ SRC_URI_append_vuultimo4k = " \
 SRC_URI_append_vuuno4k = " \
 	file://enigma2_vuplus_remove_pvr_action.patch \
 	file://vu_hd_1080p_default.patch \
+	file://enigma2_vuplus_uianimation_speed.patch \
+"
+
+SRC_URI_append_vuuno4kse = " \
+	file://skin_user_vuuno4kse.xml \
+	file://lcd_icons_vuuno4kse \
+	file://vu_hd_1080p_default.patch \
+	file://enigma2_vuplus_uianimation_speed.patch \
+	file://enigma2_vuplus_check_recording.patch \
 "
 
 do_install_append_vuultimo() {
@@ -66,5 +75,11 @@ do_install_append_vuultimo4k() {
         install -m 0755 ${WORKDIR}/skin_user_vuultimo4k.xml ${D}/usr/share/enigma2/defaults/skin_user.xml
         install -d ${D}/usr/share/enigma2/lcd_icons/
         install -m 0755 ${WORKDIR}/lcd_icons_vuultimo4k/*.png ${D}/usr/share/enigma2/lcd_icons/
+}
+
+do_install_append_vuuno4kse() {
+        install -m 0755 ${WORKDIR}/skin_user_vuuno4kse.xml ${D}/usr/share/enigma2/defaults/skin_user.xml
+        install -d ${D}/usr/share/enigma2/lcd_icons/
+        install -m 0755 ${WORKDIR}/lcd_icons_vuuno4kse/*.png ${D}/usr/share/enigma2/lcd_icons/
 }
 

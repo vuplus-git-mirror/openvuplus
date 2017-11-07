@@ -32,7 +32,6 @@ KERNEL_WIFI_MODULES = " \
 	kernel-module-rt2500usb \
 	kernel-module-rtl8187 \
 	kernel-module-r8712u \
-	kernel-module-w35und \
 	kernel-module-zd1211rw \
 	kernel-module-llc \
 	kernel-module-stp \
@@ -42,6 +41,7 @@ KERNEL_WIFI_MODULES = " \
 "
 
 KERNEL_WIFI_MODULES += "${@base_version_less_or_equal('VUPLUS_KERNEL_VERSION', '3.1.1', 'kernel-module-r8192u-usb', '', d)}"
+KERNEL_WIFI_MODULES += "${@base_version_less_or_equal('VUPLUS_KERNEL_VERSION', '3.14.28', 'kernel-module-w35und', '', d)}"
 
 LEGACY_MODULES = " \
 	r8192cu \

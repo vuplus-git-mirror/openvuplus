@@ -8,7 +8,7 @@ index ccfb515..a6f8d11 100644
  stamp-h1
 +aio-grab_vuplus_*
 diff --git a/main.c b/main.c
-index 190ff5f..a4df66f 100644
+index 190ff5f..c600103 100644
 --- a/main.c
 +++ b/main.c
 @@ -1,5 +1,5 @@
@@ -72,7 +72,7 @@ index 190ff5f..a4df66f 100644
  
  	unsigned int xres_v = 0,yres_v = 0,xres_o,yres_o,xres,yres,aspect,width;
  	int c,osd_only,video_only,use_osd_res,use_png,use_jpg,jpg_quality,no_aspect,use_letterbox;
-@@ -205,11 +221,41 @@ int main(int argc, char **argv) {
+@@ -205,11 +221,43 @@ int main(int argc, char **argv) {
  	char filename[256] = { "/tmp/screenshot.bmp" };
  
  	// detect STB
@@ -111,11 +111,13 @@ index 190ff5f..a4df66f 100644
 +			stb_type=BRCM_ARM;
 +		else if (strstr(upcase(line),"7252"))
 +			stb_type=BRCM_ARM;
++		else if (strstr(upcase(line),"7260"))
++			stb_type=BRCM_ARM;
 +#else
  		line = file_getline("/proc/stb/info/model");
  		if (line == NULL)
  			return 1;
-@@ -221,6 +267,7 @@ int main(int argc, char **argv) {
+@@ -221,6 +269,7 @@ int main(int argc, char **argv) {
  			 !strcmp(line, "dm800se") ||
  			 !strcmp(line, "dm7020hd"))
  			stb_type = BRCM7405;
@@ -123,7 +125,7 @@ index 190ff5f..a4df66f 100644
  	} else if (strstr(line, "xilleonfb")) {
  		stb_type = XILLEON;
  	} else if (strstr(line, "Pallas FB")) {
-@@ -325,9 +372,18 @@ int main(int argc, char **argv) {
+@@ -325,9 +374,18 @@ int main(int argc, char **argv) {
  	if (!video_only && !getosd(osd, &xres_o, &yres_o))
  		return 1;
  
@@ -145,7 +147,7 @@ index 190ff5f..a4df66f 100644
  
  	// get aspect ratio
  	if (stb_type == VULCAN || stb_type == PALLAS)
-@@ -549,6 +605,22 @@ int main(int argc, char **argv) {
+@@ -549,6 +607,22 @@ int main(int argc, char **argv) {
  }
  
  // grabing the video picture
@@ -168,7 +170,7 @@ index 190ff5f..a4df66f 100644
  
  static bool getvideo(unsigned char *video, unsigned int *xres, unsigned int *yres)
  {
-@@ -563,16 +635,34 @@ static bool getvideo(unsigned char *video, unsigned int *xres, unsigned int *yre
+@@ -563,16 +637,34 @@ static bool getvideo(unsigned char *video, unsigned int *xres, unsigned int *yre
  		perror("/dev/mem");
  		return false;
  	}
@@ -205,7 +207,7 @@ index 190ff5f..a4df66f 100644
  		unsigned char data[100];
  
  		unsigned int adr,adr2,ofs,ofs2,offset/*,vert_start,vert_end*/;
-@@ -582,12 +672,30 @@ static bool getvideo(unsigned char *video, unsigned int *xres, unsigned int *yre
+@@ -582,12 +674,30 @@ static bool getvideo(unsigned char *video, unsigned int *xres, unsigned int *yre
  		memcpy(data,memory,100); 
  		//vert_start=data[0x1B]<<8|data[0x1A];
  		//vert_end=data[0x19]<<8|data[0x18];
@@ -236,7 +238,7 @@ index 190ff5f..a4df66f 100644
  		
  		munmap(memory, 100);
  
-@@ -609,7 +717,11 @@ static bool getvideo(unsigned char *video, unsigned int *xres, unsigned int *yre
+@@ -609,7 +719,11 @@ static bool getvideo(unsigned char *video, unsigned int *xres, unsigned int *yre
  		assert(chroma);
  
  		// grabbing luma & chroma plane from the decoder memory
@@ -248,7 +250,7 @@ index 190ff5f..a4df66f 100644
  			// on dm800/dm500hd we have direct access to the decoder memory
  			memory = mmap(0, offset + stride*(ofs2+64), PROT_READ, MAP_SHARED, mem_fd, adr);
  			if (memory == MAP_FAILED) {
-@@ -620,7 +732,11 @@ static bool getvideo(unsigned char *video, unsigned int *xres, unsigned int *yre
+@@ -620,7 +734,11 @@ static bool getvideo(unsigned char *video, unsigned int *xres, unsigned int *yre
  			usleep(50000); 	// we try to get a full picture, its not possible to get a sync from the decoder so we use a delay
  					// and hope we get a good timing. dont ask me why, but every DM800 i tested so far produced a good
  					// result with a 50ms delay
@@ -260,7 +262,7 @@ index 190ff5f..a4df66f 100644
  			// on dm8000 we have to use dma, so dont change anything here until you really know what you are doing !
  			
  			unsigned int i = 0;
-@@ -639,7 +755,11 @@ static bool getvideo(unsigned char *video, unsigned int *xres, unsigned int *yre
+@@ -639,7 +757,11 @@ static bool getvideo(unsigned char *video, unsigned int *xres, unsigned int *yre
  			}
  
  			volatile unsigned long *mem_dma;
@@ -272,7 +274,7 @@ index 190ff5f..a4df66f 100644
  			if (mem_dma == MAP_FAILED) {
  				perror("mmap");
  				return false;
-@@ -675,8 +795,11 @@ static bool getvideo(unsigned char *video, unsigned int *xres, unsigned int *yre
+@@ -675,8 +797,11 @@ static bool getvideo(unsigned char *video, unsigned int *xres, unsigned int *yre
  		unsigned int t = 0, t2 = 0, dat1 = 0;
  		unsigned int chr_luma_stride = 0x40;
   		unsigned int sw;
@@ -285,7 +287,7 @@ index 190ff5f..a4df66f 100644
  			chr_luma_stride *= 2;
  
  		xsub=chr_luma_stride;
-@@ -692,6 +815,7 @@ static bool getvideo(unsigned char *video, unsigned int *xres, unsigned int *yre
+@@ -692,6 +817,7 @@ static bool getvideo(unsigned char *video, unsigned int *xres, unsigned int *yre
  			for (ytmp = 0; ytmp < ofs; ytmp++) 
  			{
  				memcpy(luma + dat1, memory + t, xsub); // luma
@@ -293,7 +295,7 @@ index 190ff5f..a4df66f 100644
  				t += chr_luma_stride;
  
  				switch (ofs2-ytmp) // the two switch commands are much faster than one if statement
-@@ -710,10 +834,17 @@ static bool getvideo(unsigned char *video, unsigned int *xres, unsigned int *yre
+@@ -710,10 +836,17 @@ static bool getvideo(unsigned char *video, unsigned int *xres, unsigned int *yre
  				dat1+=stride;
  			}
  		}
