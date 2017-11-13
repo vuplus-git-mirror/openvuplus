@@ -1,6 +1,6 @@
 FILESEXTRAPATHS_prepend := "${THISDIR}/${PN}:"
 
-PR .= "-bsp21"
+PR .= "-bsp22"
 
 SRC_URI_append_vusolo = " \
 	file://enigma2_vuplus_misc.patch \
@@ -29,6 +29,7 @@ SRC_URI_append_vusolo4k = " \
 	file://skin_user_vusolo4k.xml \
 	file://lcd_icons_vusolo4k \
 	file://vu_hd_1080p_default.patch \
+	file://enigma2_vuplus_check_recording.patch \
 "
 
 SRC_URI_append_vuultimo4k = " \
