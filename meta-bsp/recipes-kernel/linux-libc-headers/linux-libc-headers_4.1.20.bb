@@ -1,10 +1,11 @@
 FILESEXTRAPATHS_prepend := "${THISDIR}/files:"
 
 PV = "4.1.20"
+PR .= "-bsp1"
 
 require linux-libc-headers.inc
 
-SRC_URI += " \
+SRC_URI_append_vuultimo4k = " \
 	file://linux_4.1.20_dmx_source_dvr.patch \
 "
 
