@@ -75,6 +75,7 @@ DEPENDS = " \
 	wavpack \
 	yajl \
 	zlib \
+	libnfs \
 	kodiegl \
 	"
 
