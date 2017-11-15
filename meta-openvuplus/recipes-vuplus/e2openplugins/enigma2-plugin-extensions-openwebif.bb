@@ -12,12 +12,20 @@ SRCREV_pn-${PN}="d84307958746e6a597b43defe5bd1cb78fd745c8"
 inherit gitpkgv
 PV = "1+git${SRCPV}"
 PKGV = "1+git${GITPKGV}"
-PR = "r5"
+PR = "r6"
 
 require openplugins-distutils.inc
 
-SRC_URI += " file://openwebif_support_vumodels.patch"
-SRC_URI += " file://openwebif_block_in_qpip.patch"
+SRC_URI = "git://github.com/E2OpenPlugins/e2openplugin-${MODULE}.git;protocol=git \
+	file://openwebif_support_vumodels.patch \
+	file://openwebif_block_in_qpip.patch \
+	file://openwebif_vu_box_remote.patch \
+	file://rc_brown.png \
+	file://box_solo4k.png \
+	file://box_uno4k.png \
+	file://box_ultimo4k.png \
+	file://box_uno4kse.png \
+"
 
 # Just a quick hack to "compile" it
 do_compile() {
@@ -29,6 +37,11 @@ PLUGINPATH = "/usr/lib/enigma2/python/Plugins/Extensions/${MODULE}"
 do_install_append() {
 	install -d ${D}${PLUGINPATH}
 	cp -rp ${S}/plugin/* ${D}${PLUGINPATH}
+	install -m 0755 ${WORKDIR}/rc_brown.png ${D}${PLUGINPATH}/public/images/remotes/vu_brown.png
+	install -m 0755 ${WORKDIR}/box_solo4k.png ${D}${PLUGINPATH}/public/images/boxes/solo4k.png
+	install -m 0755 ${WORKDIR}/box_uno4k.png ${D}${PLUGINPATH}/public/images/boxes/uno4k.png
+	install -m 0755 ${WORKDIR}/box_ultimo4k.png ${D}${PLUGINPATH}/public/images/boxes/ultimo4k.png
+	install -m 0755 ${WORKDIR}/box_uno4kse.png ${D}${PLUGINPATH}/public/images/boxes/uno4kse.png
 }
 
 python do_package_prepend () {
@@ -41,9 +54,10 @@ python do_package_prepend () {
   ('vuzero', 'zero.jpg', 'vu_normal.png'),
   ('vuultimo', 'ultimo.jpg', 'vu_ultimo.png'),
   ('vuuno', 'uno.jpg', 'vu_normal.png'),
-  ('vuultimo4k', 'unknown.jpg', 'vu_normal.png'),
-  ('vuuno4k', 'unknown.jpg', 'vu_normal.png'),
-  ('vuuno4kse', 'unknown.jpg', 'vu_normal.png'),
+  ('vusolo4k', 'solo4k.png', 'vu_normal.png'),
+  ('vuuno4k', 'uno4k.png', 'vu_normal.png'),
+  ('vuultimo4k', 'ultimo4k.png', 'vu_normal.png'),
+  ('vuuno4kse', 'uno4kse.png', 'vu_brown.png'),
   ]
   import os
   top = '${D}${PLUGINPATH}/public/images/'
@@ -67,4 +81,6 @@ python do_package_prepend () {
 FILES_${PN} = "${PLUGINPATH}"
 
 do_populate_sysroot[noexec] = "1"
+
+PACKAGE_ARCH = "${MACHINE_ARCH}"
 
