@@ -1,11 +1,5 @@
-commit 6d396db9931e940fbc3435266ace23327b978575
-Author: hschang <chang@dev3>
-Date:   Thu Aug 10 15:22:42 2017 +0900
-
-    USB Harddisk test
-
 diff --git a/RecordTimer.py b/RecordTimer.py
-index 32fb923..5a13d7f 100755
+index 58ef5b3..6e0862e 100755
 --- a/RecordTimer.py
 +++ b/RecordTimer.py
 @@ -410,6 +410,15 @@ class RecordTimerEntry(timer.TimerEntry, object):
@@ -42,19 +36,10 @@ index 32fb923..5a13d7f 100755
  		# simply abort the timer. don't run trough all the stages.
  		if w.shouldSkip():
 diff --git a/lib/python/Components/Harddisk.py b/lib/python/Components/Harddisk.py
-index 1221f8f..c455e5f 100755
+index fe99426..e40f1b5 100755
 --- a/lib/python/Components/Harddisk.py
 +++ b/lib/python/Components/Harddisk.py
-@@ -6,6 +6,8 @@ from Tools.CList import CList
- from SystemInfo import SystemInfo
- import time
- from Components.Console import Console
-+import os
-+import glob
- 
- def MajorMinor(path):
- 	rdev = stat(path).st_rdev
-@@ -56,6 +58,30 @@ def enableUdevEvent(enable = True):
+@@ -58,6 +58,30 @@ def enableUdevEvent(enable = True):
  	print "CMD : ", cmd
  	system(cmd)
  
@@ -86,10 +71,10 @@ index 1221f8f..c455e5f 100755
  DEVTYPE_DEVFS = 1
  
 diff --git a/lib/python/Screens/InfoBarGenerics.py b/lib/python/Screens/InfoBarGenerics.py
-index ea75301..9b04238 100755
+index baeaacb..cb28ffc 100755
 --- a/lib/python/Screens/InfoBarGenerics.py
 +++ b/lib/python/Screens/InfoBarGenerics.py
-@@ -1223,6 +1223,11 @@ class InfoBarTimeshift:
+@@ -1239,6 +1239,11 @@ class InfoBarTimeshift:
  		if self.timeshift_enabled:
  			print "hu, timeshift already enabled?"
  		else:
@@ -102,9 +87,7 @@ index ea75301..9b04238 100755
  				self.timeshift_enabled = 1
  
 diff --git a/timer.py b/timer.py
-old mode 100644
-new mode 100755
-index aaae0b2..d58a83e
+index aaae0b2..d58a83e 100644
 --- a/timer.py
 +++ b/timer.py
 @@ -232,6 +232,10 @@ class Timer:
