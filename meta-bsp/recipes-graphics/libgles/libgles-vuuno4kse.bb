@@ -3,8 +3,8 @@ require libgles.inc
 COMPATIBLE_MACHINE = "^(vuuno4kse)$"
 
 SRCDATE = "20171116"
-SRCDATE_PR = "r0"
+SRCDATE_PR = "r1"
 PV="16.1"
 
-SRC_URI[md5sum] = "9f5b7c55441f5f148bbdf8286bd91739"
-SRC_URI[sha256sum] = "0fad8ffa3dd65956210c64008b8d587e562e0b3954bad31911b900db151f6a6b"
+SRC_URI[md5sum] = "37fdf3cf0bf95e0d59cd214d3764e27a"
+SRC_URI[sha256sum] = "54ac889e227ad360b912aa59d6e1835d596ae2e3b7024f8ec6a3269db8ad8409"
