@@ -7,11 +7,15 @@ def readFile(fn):
 	return open(fn, "r").read()
 
 def getLabelFromDevName(dev_kernel):
-	for label in glob.glob("/dev/disk/by-label/*"):
-		realPath = os.path.realpath(label)
-		if realPath == dev_kernel:
-			return os.path.basename(label)
-	return None
+	data = None
+	try:
+		data = os.popen("e2label %s" % dev_kernel).read().strip()
+		if not data: 
+			data = None
+	except:
+		data = None
+
+	return data
 
 def getModel(dev_base):
 	model = None
