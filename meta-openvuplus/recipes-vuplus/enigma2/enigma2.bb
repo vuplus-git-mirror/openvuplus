@@ -64,6 +64,7 @@ RDEPENDS_${PN} = " \
 	vuplus-skins \
 	${@base_contains("VUPLUS_FEATURES", "dvbproxy", "vuplus-dvb-proxy libgles vuplus-platform-util", "vuplus-dvb-modules", d)} \
 	${@base_contains("VUPLUS_FEATURES", "bluetooth", "bluetoothsetup-${MACHINE}", "", d)} \
+	udev \
 	"
 
 PYTHON_RDEPS = " \
@@ -232,7 +233,7 @@ DEPENDS += "${@base_contains("VUPLUS_FEATURES", "uianimation", "libgles libvugle
 RDEPENDS_${PN}_append_vuplus += "${@base_contains("VUPLUS_FEATURES", "uianimation", "libvugles2" , "", d)}"
 
 PN = "enigma2"
-PR = "r169"
+PR = "r170"
 
 inherit gitpkgv pythonnative
 
