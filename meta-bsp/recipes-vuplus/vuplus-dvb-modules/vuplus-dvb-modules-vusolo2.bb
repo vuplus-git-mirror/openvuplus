@@ -2,9 +2,9 @@ require vuplus-dvb-modules.inc
 
 COMPATIBLE_MACHINE = "^(vusolo2)$"
 
-SRCDATE = "20171107"
+SRCDATE = "20171121"
 
 MODULES_NAME = "procmk\ndvb-bcm7356\nbrcmfb\nfpga_directc"
 
-SRC_URI[md5sum] = "e1c4d3b99c3a765a704a1717b5478810"
-SRC_URI[sha256sum] = "cf0606f09e2651dd9472abf48f7230d0daffa1ed0d72716fd81730aeda44b5c9"
+SRC_URI[md5sum] = "56516404031d6bb7c73da063268dd450"
+SRC_URI[sha256sum] = "f84fab0026e4463433ccc58242302576b9bb7aae2dc6bf6a2ae9d007dfc08c68"
