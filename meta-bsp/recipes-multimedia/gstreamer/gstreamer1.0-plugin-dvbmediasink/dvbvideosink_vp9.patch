@@ -1,0 +1,126 @@
+commit 4751cfaa5e3a15cf7154506154fd7c1e56c5a861
+Author: oskwon <oskwon@dev3>
+Date:   Wed Nov 22 14:38:46 2017 +0900
+
+    vp9
+
+diff --git a/configure.ac b/configure.ac
+index ff2abea..75c5e80 100644
+--- a/configure.ac
++++ b/configure.ac
+@@ -227,6 +227,13 @@ if test "$have_eac3" = "yes"; then
+ 	AC_DEFINE([HAVE_EAC3],[1],[Define to 1 for E-AC3 support])
+ fi
+ 
++AC_ARG_WITH(vb9,
++	AS_HELP_STRING([--with-vb9],[support VP9 , yes or no]),
++	[have_vb9=$withval],[have_vb9=no])
++if test "$have_vb9" = "yes"; then
++	AC_DEFINE([HAVE_VB9],[1],[Define to 1 for VB9 support])
++fi
++
+ AC_ARG_WITH(dtsdownmix,
+ 	AS_HELP_STRING([--with-dtsdownmix],[build dts downmix element, yes or no]),
+ 	[have_dtsdownmix=$withval],[have_dtsdownmix=no])
+diff --git a/gstdvbvideosink.c b/gstdvbvideosink.c
+index 7a4f5b4..08ab3d5 100644
+--- a/gstdvbvideosink.c
++++ b/gstdvbvideosink.c
+@@ -239,6 +239,10 @@ GST_STATIC_PAD_TEMPLATE (
+ 	"video/x-wmv, "
+ 		VIDEO_CAPS ", wmvversion = (int) 3; "
+ #endif
++#ifdef HAVE_VB9
++	"video/x-vp9, "
++		VIDEO_CAPS "; "
++#endif
+ 	"video/mpegts, systemstream=(boolean)true, "
+ 		VIDEO_CAPS "; "
+ 	)
+@@ -646,6 +650,7 @@ static int video_write(GstBaseSink *sink, GstDVBVideoSink *self, GstBuffer *buff
+ 		}
+ 		if (pfd[1].revents & POLLOUT)
+ 		{
++			int wr = 0;
+ 			size_t queuestart, queueend;
+ 			GstBuffer *queuebuffer;
+ 			GST_OBJECT_LOCK(self);
+@@ -659,7 +664,7 @@ static int video_write(GstBaseSink *sink, GstDVBVideoSink *self, GstBuffer *buff
+ 				gst_buffer_map(queuebuffer, &queuemap, GST_MAP_READ);
+ 				queuedata = queuemap.data;
+ #endif
+-				int wr = write(self->fd, queuedata + queuestart, queueend - queuestart);
++				wr = write(self->fd, queuedata + queuestart, queueend - queuestart);
+ #if GST_VERSION_MAJOR >= 1
+ 				gst_buffer_unmap(queuebuffer, &queuemap);
+ #endif
+@@ -691,7 +696,7 @@ static int video_write(GstBaseSink *sink, GstDVBVideoSink *self, GstBuffer *buff
+ 				continue;
+ 			}
+ 			GST_OBJECT_UNLOCK(self);
+-			int wr = write(self->fd, data + written, len - written);
++			wr = write(self->fd, data + written, len - written);
+ 			if (wr < 0)
+ 			{
+ 				switch (errno)
+@@ -984,6 +989,23 @@ static GstFlowReturn gst_dvbvideosink_render(GstBaseSink *sink, GstBuffer *buffe
+ 				}
+ 			}
+ 		}
++#ifdef HAVE_VB9
++		else if (self->codec_type == CT_VP9)
++		{
++			uint32_t vp9_pts = (GST_TIME_AS_USECONDS(GST_BUFFER_PTS_IS_VALID(buffer) ? GST_BUFFER_PTS(buffer) : GST_BUFFER_DTS(buffer)) *45) / 1000;
++			memcpy(&pes_header[9], &vp9_pts, sizeof(vp9_pts));
++
++			uint32_t len = data_len + 4 + 6;
++			memcpy(pes_header+pes_header_len, "BCMV", 4);
++			pes_header_len += 4;
++			pes_header[pes_header_len++] = (len & 0xFF000000) >> 24;
++			pes_header[pes_header_len++] = (len & 0x00FF0000) >> 16;
++			pes_header[pes_header_len++] = (len & 0x0000FF00) >> 8;
++			pes_header[pes_header_len++] = (len & 0x000000FF) >> 0;
++			pes_header[pes_header_len++] = 0;
++			pes_header[pes_header_len++] = 0;
++		}
++#endif /* HAVE_VB9 */
+ 	}
+ 
+ #ifdef PACK_UNPACKED_XVID_DIVX5_BITSTREAM
+@@ -1701,7 +1723,14 @@ static gboolean gst_dvbvideosink_set_caps(GstBaseSink *basesink, GstCaps *caps)
+ 			GST_INFO_OBJECT (self, "MIMETYPE video/x-wmv -> STREAMTYPE_VC1_SM");
+ 		}
+ 	}
+-
++#ifdef HAVE_VB9
++	else if (!strcmp (mimetype, "video/x-vp9"))
++	{
++		self->stream_type = STREAMTYPE_VB9;
++		self->codec_type = CT_VP9;
++		GST_INFO_OBJECT (self, "MIMETYPE video/x-vp9 -> VIDEO_SET_STREAMTYPE, STREAMTYPE_VB9");
++	}
++#endif
+ 	if (self->stream_type != STREAMTYPE_UNKNOWN)
+ 	{
+ 		gint numerator, denominator;
+diff --git a/gstdvbvideosink.h b/gstdvbvideosink.h
+index d055d4a..3340840 100644
+--- a/gstdvbvideosink.h
++++ b/gstdvbvideosink.h
+@@ -65,7 +65,7 @@ typedef struct _GstDVBVideoSink		GstDVBVideoSink;
+ typedef struct _GstDVBVideoSinkClass	GstDVBVideoSinkClass;
+ typedef struct _GstDVBVideoSinkPrivate	GstDVBVideoSinkPrivate;
+ 
+-typedef enum { CT_MPEG1, CT_MPEG2, CT_H264, CT_DIVX311, CT_DIVX4, CT_MPEG4_PART2, CT_VC1, CT_VC1_SM, CT_H265 } t_codec_type;
++typedef enum { CT_MPEG1, CT_MPEG2, CT_H264, CT_DIVX311, CT_DIVX4, CT_MPEG4_PART2, CT_VC1, CT_VC1_SM, CT_H265, CT_VP9 } t_codec_type;
+ typedef enum {
+ 	STREAMTYPE_UNKNOWN = -1,
+ 	STREAMTYPE_MPEG2 = 0,
+@@ -75,6 +75,7 @@ typedef enum {
+ 	STREAMTYPE_MPEG4_Part2 = 4,
+ 	STREAMTYPE_VC1_SM = 5,
+ 	STREAMTYPE_MPEG1 = 6,
++	STREAMTYPE_VB9 = 9,
+ 	STREAMTYPE_XVID = 10,
+ 	STREAMTYPE_DIVX311 = 13,
+ 	STREAMTYPE_DIVX4 = 14,

@@ -1,0 +1,12 @@
+FILESEXTRAPATHS_prepend := "${THISDIR}/${PN}:"
+
+PR .= "-bsp0"
+
+SRC_URI_append_vuuno4k = " file://dvbvideosink_vp9.patch"
+SRC_URI_append_vuultimo4k = " file://dvbvideosink_vp9.patch"
+SRC_URI_append_vuuno4kse = " file://dvbvideosink_vp9.patch"
+
+EXTRA_OECONF_append_vuuno4k = " --with-vb9"
+EXTRA_OECONF_append_vuultimo4k = " --with-vb9"
+EXTRA_OECONF_append_vuuno4kse = " --with-vb9"
+
