@@ -53,6 +53,14 @@ SRC_URI_append_vuuno4kse = " \
 	file://enigma2_vuplus_check_recording.patch \
 "
 
+SRC_URI_append_vuzero4k = " \
+	file://vu_hd_1080p_default.patch \
+	file://enigma2_vuplus_uianimation_speed.patch \
+	file://enigma2_vuplus_check_recording.patch \
+	file://enigma2_vuplus_zero4k_hdd_recording.patch \
+	file://enigma2_vuplus_dvbs2x.patch \
+"
+
 do_install_append_vuultimo() {
         install -m 0755 ${WORKDIR}/analog.ttf ${D}/usr/share/fonts/
         install -m 0755 ${WORKDIR}/skin_user.xml ${D}/usr/share/enigma2/defaults/

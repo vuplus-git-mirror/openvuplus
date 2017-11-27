@@ -14,21 +14,21 @@ index 9add982..da2be4a 100644
  		else:
  			info["boximage"] = "unknown.jpg"
 diff --git a/plugin/controllers/models/owibranding.py b/plugin/controllers/models/owibranding.py
-index 9b8f1e5..835cee5 100644
+index 9b8f1e5..4bbf6fb 100644
 --- a/plugin/controllers/models/owibranding.py
 +++ b/plugin/controllers/models/owibranding.py
 @@ -277,6 +277,8 @@ def getAllInfo():
  		remote = "vu_duo2"
  	elif procmodel == "ultimo":
  		remote = "vu_ultimo"
-+	elif procmodel == "uno4kse":
++	elif procmodel in ("uno4kse", "zero4k"):
 +		remote = "vu_brown"
  	elif procmodel == "e3hd":
  		remote = "e3hd"
  	elif procmodel in ("et9x00", "et9000", "et9200", "et9500"):
 diff --git a/plugin/public/static/remotes/vu_brown.html b/plugin/public/static/remotes/vu_brown.html
 new file mode 100644
-index 0000000..b7835d3
+index 0000000..0c3bf8b
 --- /dev/null
 +++ b/plugin/public/static/remotes/vu_brown.html
 @@ -0,0 +1,47 @@

@@ -16,7 +16,8 @@ KERNEL_CONFIG = "${MACHINE}_defconfig"
 SRC_URI += "http://archive.vuplus.com/download/kernel/stblinux-4.1-${KERNEL_SRC_VERSION}.tar.bz2 \
 	file://${KERNEL_CONFIG} \
 	file://linux_dvb-core.patch \
-        file://bcmgenet-recovery-fix.patch \
+	file://bcmgenet-recovery-fix.patch \
+	file://linux_4_1_1_9_dvbs2x.patch \
 "
 
 SRC_URI += "${@base_contains("VUPLUS_FEATURES", "dvbproxy", "file://linux_dvb_adapter.patch;patch=1;pnum=1", "", d)}"

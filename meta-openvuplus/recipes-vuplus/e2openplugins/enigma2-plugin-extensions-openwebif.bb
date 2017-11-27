@@ -25,6 +25,7 @@ SRC_URI = "git://github.com/E2OpenPlugins/e2openplugin-${MODULE}.git;protocol=gi
 	file://box_uno4k.png \
 	file://box_ultimo4k.png \
 	file://box_uno4kse.png \
+	file://box_zero4k.png \
 "
 
 # Just a quick hack to "compile" it
@@ -42,6 +43,7 @@ do_install_append() {
 	install -m 0755 ${WORKDIR}/box_uno4k.png ${D}${PLUGINPATH}/public/images/boxes/uno4k.png
 	install -m 0755 ${WORKDIR}/box_ultimo4k.png ${D}${PLUGINPATH}/public/images/boxes/ultimo4k.png
 	install -m 0755 ${WORKDIR}/box_uno4kse.png ${D}${PLUGINPATH}/public/images/boxes/uno4kse.png
+	install -m 0755 ${WORKDIR}/box_zero4k.png ${D}${PLUGINPATH}/public/images/boxes/zero4k.png
 }
 
 python do_package_prepend () {
@@ -58,6 +60,7 @@ python do_package_prepend () {
   ('vuuno4k', 'uno4k.png', 'vu_normal.png'),
   ('vuultimo4k', 'ultimo4k.png', 'vu_normal.png'),
   ('vuuno4kse', 'uno4kse.png', 'vu_brown.png'),
+  ('vuzero4k', 'zero4k.png', 'vu_brown.png'),
   ]
   import os
   top = '${D}${PLUGINPATH}/public/images/'

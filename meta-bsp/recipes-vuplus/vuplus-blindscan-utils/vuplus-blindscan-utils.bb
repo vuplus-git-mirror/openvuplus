@@ -110,6 +110,12 @@ do_install_vuuno4kse() {
 	done
 }
 
+do_install_vuzero4k() {
+	install -d "${D}/${bindir}"
+	install -m 0755 "${S}/tt2l08b" "${D}/${bindir}/tt2l08"
+	install -m 0755 "${S}/tt2l08b_t2_scan" "${D}/${bindir}/tt2l08_t2_scan"
+}
+
 SRC_URI[md5sum] = "a8ca2f8ce06d37b7d01b729b1e4e4abb"
 SRC_URI[sha256sum] = "ec9b5dd552e72a0d775a77212350b71f5ea6f3619687c40c2bf97b12c5d7abd9"
 
