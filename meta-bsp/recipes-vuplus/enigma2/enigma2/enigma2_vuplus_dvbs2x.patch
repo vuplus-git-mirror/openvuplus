@@ -1,11 +1,5 @@
-commit 8b323facfe629645939134a6422e4850425009ce
-Author: hschang <chang@dev3>
-Date:   Mon Nov 27 11:45:33 2017 +0900
-
-    Support DVB-S2X
-
 diff --git a/lib/dvb/db.cpp b/lib/dvb/db.cpp
-index 0f367be..ca43546 100755
+index 0f367be5..ca435464 100755
 --- a/lib/dvb/db.cpp
 +++ b/lib/dvb/db.cpp
 @@ -512,7 +512,7 @@ void eDVBDB::saveServicelist(const char *file)
@@ -18,7 +12,7 @@ index 0f367be..ca43546 100755
  				fprintf(f, "\ts %d:%d:%d:%d:%d:%d:%d:%d:%d:%d:%d\n",
  					sat.frequency, sat.symbol_rate,
 diff --git a/lib/dvb/dvb.cpp b/lib/dvb/dvb.cpp
-index 852c403..67c3aa9 100644
+index 852c4034..67c3aa98 100644
 --- a/lib/dvb/dvb.cpp
 +++ b/lib/dvb/dvb.cpp
 @@ -414,6 +414,10 @@ bool eDVBResourceManager::frontendIsCompatible(int index, const char *type)
@@ -42,7 +36,7 @@ index 852c403..67c3aa9 100644
  			else if (!strcmp(type, "DVB-T2") || !strcmp(type, "DVB-T"))
  			{
 diff --git a/lib/dvb/frontend.cpp b/lib/dvb/frontend.cpp
-index 91c866c..a2eb0e8 100755
+index 91c866c9..a2eb0e82 100755
 --- a/lib/dvb/frontend.cpp
 +++ b/lib/dvb/frontend.cpp
 @@ -38,6 +38,9 @@
@@ -300,7 +294,7 @@ index 91c866c..a2eb0e8 100755
  arg_error:
  	PyErr_SetString(PyExc_StandardError,
 diff --git a/lib/dvb/frontendparms.h b/lib/dvb/frontendparms.h
-index c4989fb..c941ca6 100644
+index c4989fbc..c941ca69 100644
 --- a/lib/dvb/frontendparms.h
 +++ b/lib/dvb/frontendparms.h
 @@ -21,15 +21,19 @@ struct eDVBFrontendParametersSatellite
@@ -327,7 +321,7 @@ index c4989fb..c941ca6 100644
  
  	// dvb-s2
 diff --git a/lib/dvb/scan.cpp b/lib/dvb/scan.cpp
-index 969ed9f..1f045df 100644
+index 969ed9fa..1f045df8 100644
 --- a/lib/dvb/scan.cpp
 +++ b/lib/dvb/scan.cpp
 @@ -832,15 +832,41 @@ void eDVBScan::channelDone()
@@ -375,7 +369,7 @@ index 969ed9f..1f045df 100644
  						parm.polarisation ? 'V' : 'H',
  						parm.orbital_position/10,
 diff --git a/lib/python/Components/NimManager.py b/lib/python/Components/NimManager.py
-index b92ad92..d726fec 100755
+index b92ad92b..d726fece 100755
 --- a/lib/python/Components/NimManager.py
 +++ b/lib/python/Components/NimManager.py
 @@ -153,7 +153,7 @@ class SecConfigure:
@@ -465,7 +459,7 @@ index b92ad92..d726fec 100755
  		positionerList = []
  		for nim in nimList[:]:
 diff --git a/lib/python/Components/ServiceScan.py b/lib/python/Components/ServiceScan.py
-index 6a82ade..7412386 100644
+index 6a82ade0..74123861 100644
 --- a/lib/python/Components/ServiceScan.py
 +++ b/lib/python/Components/ServiceScan.py
 @@ -54,9 +54,11 @@ class ServiceScan:
@@ -496,7 +490,7 @@ index 6a82ade..7412386 100644
  						network = _("Cable")
  						tp = transponder.getDVBC()
 diff --git a/lib/python/Plugins/SystemPlugins/Blindscan/plugin.py b/lib/python/Plugins/SystemPlugins/Blindscan/plugin.py
-index 82ce819..5215a4b 100644
+index 82ce819a..5215a4b8 100644
 --- a/lib/python/Plugins/SystemPlugins/Blindscan/plugin.py
 +++ b/lib/python/Plugins/SystemPlugins/Blindscan/plugin.py
 @@ -199,7 +199,7 @@ class Blindscan(ConfigListScreen, Screen):
@@ -541,14 +535,38 @@ index 82ce819..5215a4b 100644
  						"ROLLOFF_25" : parm.RollOff_alpha_0_25,
  						"ROLLOFF_35" : parm.RollOff_alpha_0_35}
 diff --git a/lib/python/Plugins/SystemPlugins/PositionerSetup/plugin.py b/lib/python/Plugins/SystemPlugins/PositionerSetup/plugin.py
-index e097117..eb0fe51 100644
+index e0971173..b94a8819 100644
 --- a/lib/python/Plugins/SystemPlugins/PositionerSetup/plugin.py
 +++ b/lib/python/Plugins/SystemPlugins/PositionerSetup/plugin.py
-@@ -451,6 +451,21 @@ class TunerScreen(ScanSetup):
+@@ -433,7 +433,12 @@ class TunerScreen(ScanSetup):
+ 		self.systemEntry = None
+ 		
+ 		if tuning.type.value == "manual_transponder":
+-			if nim.isCompatible("DVB-S2"):
++			scan_sat_system_value = self.scan_sat.system.value
++			if nim.isCompatible("DVB-S2X"):
++				scan_sat_system_value = self.scan_sat.system_dvbs2x.value
++				self.systemEntry = getConfigListEntry(_('System'), self.scan_sat.system_dvbs2x)
++				self.list.append(self.systemEntry)
++			elif nim.isCompatible("DVB-S2"):
+ 				self.systemEntry = getConfigListEntry(_('System'), self.scan_sat.system)
+ 				self.list.append(self.systemEntry)
+ 			else:
+@@ -443,21 +448,39 @@ class TunerScreen(ScanSetup):
+ 			self.list.append(getConfigListEntry(_('Inversion'), self.scan_sat.inversion))
+ 			self.list.append(getConfigListEntry(_('Symbol rate'), self.scan_sat.symbolrate))
+ 			self.list.append(getConfigListEntry(_('Polarization'), self.scan_sat.polarization))
+-			if self.scan_sat.system.value == eDVBFrontendParametersSatellite.System_DVB_S:
++			if scan_sat_system_value == eDVBFrontendParametersSatellite.System_DVB_S:
+ 				self.list.append(getConfigListEntry(_("FEC"), self.scan_sat.fec))
+-			elif self.scan_sat.system.value == eDVBFrontendParametersSatellite.System_DVB_S2:
++			elif scan_sat_system_value == eDVBFrontendParametersSatellite.System_DVB_S2:
+ 				self.list.append(getConfigListEntry(_("FEC"), self.scan_sat.fec_s2))
+ 				self.modulationEntry = getConfigListEntry(_('Modulation'), self.scan_sat.modulation)
  				self.list.append(self.modulationEntry)
  				self.list.append(getConfigListEntry(_('Roll-off'), self.scan_sat.rolloff))
  				self.list.append(getConfigListEntry(_('Pilot'), self.scan_sat.pilot))
-+			elif self.scan_sat.system.value == eDVBFrontendParametersSatellite.System_DVB_S2X:
++			elif scan_sat_system_value == eDVBFrontendParametersSatellite.System_DVB_S2X:
 +				if self.scan_sat.modulation_dvbs2x.value == eDVBFrontendParametersSatellite.Modulation_QPSK:
 +					self.list.append(getConfigListEntry(_("FEC"), self.scan_sat.fec_s2x_qpsk))
 +				elif self.scan_sat.modulation_dvbs2x.value == eDVBFrontendParametersSatellite.Modulation_8PSK:
@@ -566,7 +584,18 @@ index e097117..eb0fe51 100644
  		elif tuning.type.value == "predefined_transponder":
  			self.list.append(getConfigListEntry(_("Transponder"), tuning.transponder))
  		self["config"].list = self.list
-@@ -499,30 +514,17 @@ class TunerScreen(ScanSetup):
+ 		self["config"].l.setList(self.list)
+ 
+ 	def newConfig(self):
+-		if self["config"].getCurrent() in (self.typeOfTuningEntry, self.satEntry, self.systemEntry):
++		cur = self["config"].getCurrent()
++		if cur in (self.typeOfTuningEntry, self.satEntry, self.systemEntry) or \
++			(self.modulationEntry and (cur == self.modulationEntry) and \
++			self.systemEntry and (self.systemEntry[1].value == eDVBFrontendParametersSatellite.System_DVB_S2X)):
+ 			self.createSetup()
+ 
+ 	def createConfig(self, foo):
+@@ -499,41 +522,49 @@ class TunerScreen(ScanSetup):
  					pol = "CR"
  				else:
  					pol = "??"
@@ -607,18 +636,23 @@ index e097117..eb0fe51 100644
  				tps.append(str(x[1]) + "," + str(x[2]) + "," + pol + "," + fec)
  			tuning.transponder = ConfigSelection(choices=tps)
  
-@@ -530,10 +532,26 @@ class TunerScreen(ScanSetup):
+ 	def keyGo(self):
  		returnvalue = (0, 0, 0, 0, 0, 0, 0, 0, 0, 0)
  		satpos = int(tuning.sat.value)
++		nim = nimmanager.nim_slots[self.feid]
  		if tuning.type.value == "manual_transponder":
 -			if self.scan_sat.system.value == eDVBFrontendParametersSatellite.System_DVB_S2:
++			system = self.scan_sat.system.value
 +			modulation = self.scan_sat.modulation.value
-+			if self.scan_sat.system.value == eDVBFrontendParametersSatellite.System_DVB_S:
-+				fec = self.scan_sat.fec.value
-+			elif self.scan_sat.system.value == eDVBFrontendParametersSatellite.System_DVB_S2:
- 				fec = self.scan_sat.fec_s2.value
-+			elif self.scan_sat.system.value == eDVBFrontendParametersSatellite.System_DVB_S2X
++			if nim.isCompatible("DVB-S2X"):
++				system = self.scan_sat.system_dvbs2x.value
 +				modulation = self.scan_sat.modulation_dvbs2x.value
++
++			if system == eDVBFrontendParametersSatellite.System_DVB_S:
++				fec = self.scan_sat.fec.value
++			elif system == eDVBFrontendParametersSatellite.System_DVB_S2:
+ 				fec = self.scan_sat.fec_s2.value
++			elif system == eDVBFrontendParametersSatellite.System_DVB_S2X:
 +				if modulation == eDVBFrontendParametersSatellite.Modulation_QPSK:
 +					fec = self.scan_sat.fec_s2x_qpsk.value
 +				elif modulation == eDVBFrontendParametersSatellite.Modulation_8PSK:
@@ -636,24 +670,50 @@ index e097117..eb0fe51 100644
  			returnvalue = (
  				self.scan_sat.frequency.value,
  				self.scan_sat.symbolrate.value,
-@@ -542,7 +560,7 @@ class TunerScreen(ScanSetup):
+@@ -541,8 +572,8 @@ class TunerScreen(ScanSetup):
+ 				fec,
  				self.scan_sat.inversion.value,
  				satpos,
- 				self.scan_sat.system.value,
+-				self.scan_sat.system.value,
 -				self.scan_sat.modulation.value,
++				system,
 +				modulation,
  				self.scan_sat.rolloff.value,
  				self.scan_sat.pilot.value)
  		elif tuning.type.value == "predefined_transponder":
 diff --git a/lib/python/Plugins/SystemPlugins/Satfinder/plugin.py b/lib/python/Plugins/SystemPlugins/Satfinder/plugin.py
-index e611ca5..3e4a043 100644
+index e611ca53..a87ca26f 100644
 --- a/lib/python/Plugins/SystemPlugins/Satfinder/plugin.py
 +++ b/lib/python/Plugins/SystemPlugins/Satfinder/plugin.py
-@@ -89,6 +89,21 @@ class Satfinder(ScanSetup):
+@@ -71,7 +71,12 @@ class Satfinder(ScanSetup):
+ 
+ 		self.systemEntry = None
+ 		if self.tuning_type.value == "manual_transponder":
+-			if nim.isCompatible("DVB-S2"):
++			scan_sat_system_value = self.scan_sat.system.value
++			if nim.isCompatible("DVB-S2X"):
++					scan_sat_system_value = self.scan_sat.system_dvbs2x.value
++					self.systemEntry = getConfigListEntry(_('System'), self.scan_sat.system_dvbs2x)
++					self.list.append(self.systemEntry)
++			elif nim.isCompatible("DVB-S2"):
+ 				self.systemEntry = getConfigListEntry(_('System'), self.scan_sat.system)
+ 				self.list.append(self.systemEntry)
+ 			else:
+@@ -81,14 +86,29 @@ class Satfinder(ScanSetup):
+ 			self.list.append(getConfigListEntry(_('Inversion'), self.scan_sat.inversion))
+ 			self.list.append(getConfigListEntry(_('Symbol rate'), self.scan_sat.symbolrate))
+ 			self.list.append(getConfigListEntry(_('Polarization'), self.scan_sat.polarization))
+-			if self.scan_sat.system.value == eDVBFrontendParametersSatellite.System_DVB_S:
++			if scan_sat_system_value == eDVBFrontendParametersSatellite.System_DVB_S:
+ 				self.list.append(getConfigListEntry(_("FEC"), self.scan_sat.fec))
+-			elif self.scan_sat.system.value == eDVBFrontendParametersSatellite.System_DVB_S2:
++			elif scan_sat_system_value == eDVBFrontendParametersSatellite.System_DVB_S2:
+ 				self.list.append(getConfigListEntry(_("FEC"), self.scan_sat.fec_s2))
+ 				self.modulationEntry = getConfigListEntry(_('Modulation'), self.scan_sat.modulation)
  				self.list.append(self.modulationEntry)
  				self.list.append(getConfigListEntry(_('Roll-off'), self.scan_sat.rolloff))
  				self.list.append(getConfigListEntry(_('Pilot'), self.scan_sat.pilot))
-+			elif self.scan_sat.system.value == eDVBFrontendParametersSatellite.System_DVB_S2X:
++			elif scan_sat_system_value == eDVBFrontendParametersSatellite.System_DVB_S2X:
 +				if self.scan_sat.modulation_dvbs2x.value == eDVBFrontendParametersSatellite.Modulation_QPSK:
 +					self.list.append(getConfigListEntry(_("FEC"), self.scan_sat.fec_s2x_qpsk))
 +				elif self.scan_sat.modulation_dvbs2x.value == eDVBFrontendParametersSatellite.Modulation_8PSK:
@@ -671,20 +731,36 @@ index e611ca5..3e4a043 100644
  		elif self.tuning_transponder and self.tuning_type.value == "predefined_transponder":
  			self.list.append(getConfigListEntry(_("Transponder"), self.tuning_transponder))
  		self["config"].list = self.list
-@@ -110,10 +125,23 @@ class Satfinder(ScanSetup):
+@@ -101,6 +121,9 @@ class Satfinder(ScanSetup):
+ 		elif cur == self.satEntry:
+ 			self.updateSats()
+ 			self.createSetup()
++		elif self.modulationEntry and (cur == self.modulationEntry) and \
++			self.systemEntry and (self.systemEntry[1].value == eDVBFrontendParametersSatellite.System_DVB_S2X):
++			self.createSetup()
+ 
+ 	def sat_changed(self, config_element):
+ 		self.newConfig()
+@@ -109,11 +132,29 @@ class Satfinder(ScanSetup):
+ 	def retune(self, configElement):
  		returnvalue = (0, 0, 0, 0, 0, 0, 0, 0, 0, 0)
  		satpos = int(self.tuning_sat.value)
++		nim = nimmanager.nim_slots[self.feid]
  		if self.tuning_type.value == "manual_transponder":
 -			if self.scan_sat.system.value == eDVBFrontendParametersSatellite.System_DVB_S2:
 -				fec = self.scan_sat.fec_s2.value
 -			else:
++			system = self.scan_sat.system.value
 +			modulation = self.scan_sat.modulation.value
-+			if self.scan_sat.system.value == eDVBFrontendParametersSatellite.System_DVB_S:
++			if nim.isCompatible("DVB-S2X"):
++				system = self.scan_sat.system_dvbs2x.value
++				modulation = self.scan_sat.modulation_dvbs2x.value
++
++			if system == eDVBFrontendParametersSatellite.System_DVB_S:
  				fec = self.scan_sat.fec.value
-+			elif self.scan_sat.system.value == eDVBFrontendParametersSatellite.System_DVB_S2:
++			elif system == eDVBFrontendParametersSatellite.System_DVB_S2:
 +				fec = self.scan_sat.fec_s2.value
-+			elif self.scan_sat.system.value == eDVBFrontendParametersSatellite.System_DVB_S2X:
-+				modulation = modulation = self.scan_sat.modulation_dvbs2x.value
++			elif system == eDVBFrontendParametersSatellite.System_DVB_S2X:
 +				if modulation == eDVBFrontendParametersSatellite.Modulation_QPSK:
 +					fec = self.scan_sat.fec_s2x_qpsk.value
 +				elif modulation == eDVBFrontendParametersSatellite.Modulation_8PSK:
@@ -698,17 +774,41 @@ index e611ca5..3e4a043 100644
  			returnvalue = (
  				self.scan_sat.frequency.value,
  				self.scan_sat.symbolrate.value,
-@@ -122,7 +150,7 @@ class Satfinder(ScanSetup):
+@@ -121,8 +162,8 @@ class Satfinder(ScanSetup):
+ 				fec,
  				self.scan_sat.inversion.value,
  				satpos,
- 				self.scan_sat.system.value,
+-				self.scan_sat.system.value,
 -				self.scan_sat.modulation.value,
++				system,
 +				modulation,
  				self.scan_sat.rolloff.value,
  				self.scan_sat.pilot.value)
  			self.tune(returnvalue)
+@@ -143,11 +184,19 @@ class Satfinder(ScanSetup):
+ 		
+ 		self.updateSats()
+ 
+-		for x in (self.tuning_type, self.tuning_sat, self.scan_sat.frequency,
++		setup_list = [self.tuning_type, self.tuning_sat, self.scan_sat.frequency,
+ 			self.scan_sat.inversion, self.scan_sat.symbolrate,
+ 			self.scan_sat.polarization, self.scan_sat.fec, self.scan_sat.pilot,
+ 			self.scan_sat.fec_s2, self.scan_sat.fec, self.scan_sat.modulation,
+-			self.scan_sat.rolloff, self.scan_sat.system):
++			self.scan_sat.rolloff, self.scan_sat.system]
++
++		nim = nimmanager.nim_slots[self.feid]
++		if nim.isCompatible("DVB-S2X"):
++			dvbs2x_setup_list = [self.scan_sat.system_dvbs2x, self.scan_sat.modulation_dvbs2x, self.scan_sat.fec_s2x_qpsk,
++				self.scan_sat.fec_s2x_8psk, self.scan_sat.fec_s2x_8apsk, self.scan_sat.fec_s2x_16apsk, self.scan_sat.fec_s2x_32apsk]
++			setup_list.extend(dvbs2x_setup_list)
++
++		for x in setup_list:
+ 			x.addNotifier(self.retune, initial_call = False)
+ 
+ 	def updateSats(self):
 diff --git a/lib/python/Screens/ScanSetup.py b/lib/python/Screens/ScanSetup.py
-index 9cc6dea..b7f5788 100644
+index 9cc6dea9..b7f57887 100644
 --- a/lib/python/Screens/ScanSetup.py
 +++ b/lib/python/Screens/ScanSetup.py
 @@ -7,6 +7,7 @@ from Components.ActionMap import NumberActionMap, ActionMap
@@ -997,7 +1097,7 @@ index 9cc6dea..b7f5788 100644
  								self.scan_sat.pilot.value)
  				removeAll = False
 diff --git a/lib/python/Tools/Transponder.py b/lib/python/Tools/Transponder.py
-index a882981..2b46d0e 100644
+index a8829813..2b46d0e6 100644
 --- a/lib/python/Tools/Transponder.py
 +++ b/lib/python/Tools/Transponder.py
 @@ -22,12 +22,34 @@ def ConvertToHumanReadable(tp, type = None):
