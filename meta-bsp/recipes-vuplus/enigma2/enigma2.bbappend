@@ -1,6 +1,6 @@
 FILESEXTRAPATHS_prepend := "${THISDIR}/${PN}:"
 
-PR .= "-bsp23"
+PR .= "-bsp24"
 
 SRC_URI_append_vusolo = " \
 	file://enigma2_vuplus_misc.patch \
@@ -59,6 +59,7 @@ SRC_URI_append_vuzero4k = " \
 	file://enigma2_vuplus_check_recording.patch \
 	file://enigma2_vuplus_zero4k_hdd_recording.patch \
 	file://enigma2_vuplus_dvbs2x.patch \
+	file://enigma2_vuplus_mis_pls.patch \
 "
 
 do_install_append_vuultimo() {
