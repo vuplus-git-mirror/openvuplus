@@ -1,5 +1,5 @@
 diff --git a/lib/dvb/db.cpp b/lib/dvb/db.cpp
-index ca435464..6eb8c8d4 100755
+index ca435464..b2d21f42 100755
 --- a/lib/dvb/db.cpp
 +++ b/lib/dvb/db.cpp
 @@ -378,11 +378,17 @@ void eDVBDB::loadServicelist(const char *file)
@@ -9,8 +9,8 @@ index ca435464..6eb8c8d4 100755
 -					pilot=eDVBFrontendParametersSatellite::Pilot_Unknown;
 +					pilot=eDVBFrontendParametersSatellite::Pilot_Unknown,
 +					is_id = NO_STREAM_ID_FILTER,
-+					pls_code = 1,
-+					pls_mode = eDVBFrontendParametersSatellite::PLS_Root;
++					pls_code = 0,
++					pls_mode = eDVBFrontendParametersSatellite::PLS_Unknown;
  				if (version == 3)
  					sscanf(line+3, "%d:%d:%d:%d:%d:%d:%d:%d:%d:%d", &frequency, &symbol_rate, &polarisation, &fec, &orbital_position, &inversion, &system, &modulation, &rolloff, &pilot);
  				else
@@ -64,8 +64,8 @@ index ca435464..6eb8c8d4 100755
 +				fprintf(f, ":%d:%d:%d:%d", sat.system, sat.modulation, sat.rolloff, sat.pilot);
 +
 +				if (static_cast<unsigned int>(sat.is_id) != NO_STREAM_ID_FILTER ||
-+					(sat.pls_code & 0x3FFFF) != 1 ||
-+					(sat.pls_mode & 3) != eDVBFrontendParametersSatellite::PLS_Root)
++					(sat.pls_code & 0x3FFFF) != 0 ||
++					(sat.pls_mode & 3) != eDVBFrontendParametersSatellite::PLS_Unknown)
 +				{
 +					fprintf(f, ":%d:%d:%d", sat.is_id, sat.pls_code & 0x3FFFF, sat.pls_mode & 3);
 +				}
@@ -88,8 +88,8 @@ index ca435464..6eb8c8d4 100755
  				pilot = eDVBFrontendParametersSatellite::Pilot_Unknown;
  				rolloff = eDVBFrontendParametersSatellite::RollOff_alpha_0_35;
 +				is_id = NO_STREAM_ID_FILTER;
-+				pls_code = 1;
-+				pls_mode = eDVBFrontendParametersSatellite::PLS_Root;
++				pls_code = 0;
++				pls_mode = eDVBFrontendParametersSatellite::PLS_Unknown;
  				tsid = -1;
  				onid = -1;
  
@@ -162,7 +162,7 @@ index 3e9fc7fd..f470fe13 100644
  };
  SWIG_TEMPLATE_TYPEDEF(ePtr<eDVBResourceManager>, eDVBResourceManager);
 diff --git a/lib/dvb/frontend.cpp b/lib/dvb/frontend.cpp
-index a2eb0e82..1fb40315 100755
+index a2eb0e82..bde90f8c 100755
 --- a/lib/dvb/frontend.cpp
 +++ b/lib/dvb/frontend.cpp
 @@ -129,12 +129,15 @@ void eDVBFrontendParametersSatellite::set(const SatelliteDeliverySystemDescripto
@@ -177,8 +177,8 @@ index a2eb0e82..1fb40315 100755
  	}
  	rolloff = descriptor.getRollOff();
 +	is_id = NO_STREAM_ID_FILTER;
-+	pls_mode = eDVBFrontendParametersSatellite::PLS_Root;
-+	pls_code = 1;
++	pls_mode = eDVBFrontendParametersSatellite::PLS_Unknown;
++	pls_code = 0;
  	if (system == eDVBFrontendParametersSatellite::System_DVB_S)
  	{
  		eDebug("SAT DVB-S freq %d, %s, pos %d, sr %d, fec %d",
@@ -454,8 +454,8 @@ index a2eb0e82..1fb40315 100755
  		{
  			return 0;
  		}
-+		bool multistream = (static_cast<unsigned int>(sat_parm.is_id) != NO_STREAM_ID_FILTER || (sat_parm.pls_code & 0x3FFFF) != 1 ||
-+					(sat_parm.pls_mode & 3) != eDVBFrontendParametersSatellite::PLS_Root);
++		bool multistream = (static_cast<unsigned int>(sat_parm.is_id) != NO_STREAM_ID_FILTER || (sat_parm.pls_code & 0x3FFFF) != 0 ||
++					(sat_parm.pls_mode & 3) != eDVBFrontendParametersSatellite::PLS_Unknown);
 +		if (((sat_parm.system == eDVBFrontendParametersSatellite::System_DVB_S2)||(sat_parm.system == eDVBFrontendParametersSatellite::System_DVB_S2X)) && multistream && !is_multistream())
 +		{
 +			return 0;
@@ -559,7 +559,9 @@ index 74123861..3a405f23 100644
  						network = _("Cable")
  						tp = transponder.getDVBC()
 diff --git a/lib/python/Components/TuneTest.py b/lib/python/Components/TuneTest.py
-index 44b19091..61c80636 100644
+old mode 100644
+new mode 100755
+index 44b19091..9fb5143a
 --- a/lib/python/Components/TuneTest.py
 +++ b/lib/python/Components/TuneTest.py
 @@ -5,8 +5,7 @@ class Tuner:
@@ -582,8 +584,8 @@ index 44b19091..61c80636 100644
 +				parm.pls_code = transponder[12]
 +			else:
 +				parm.is_id = -1
-+				parm.pls_mode = 0
-+				parm.pls_code = 1
++				parm.pls_mode = eDVBFrontendParametersSatellite.PLS_Unknown
++				parm.pls_code = 0
  			feparm = eDVBFrontendParameters()
  			feparm.setDVBS(parm, self.ignore_rotor)
  			self.lastparm = feparm
@@ -627,7 +629,9 @@ index 44b19091..61c80636 100644
  		self.transponderlist.append(transponder)
  		
 diff --git a/lib/python/Plugins/SystemPlugins/Blindscan/plugin.py b/lib/python/Plugins/SystemPlugins/Blindscan/plugin.py
-index 5215a4b8..582f2f5c 100644
+old mode 100644
+new mode 100755
+index 5215a4b8..aa80aa2a
 --- a/lib/python/Plugins/SystemPlugins/Blindscan/plugin.py
 +++ b/lib/python/Plugins/SystemPlugins/Blindscan/plugin.py
 @@ -546,6 +546,9 @@ class Blindscan(ConfigListScreen, Screen):
@@ -635,8 +639,8 @@ index 5215a4b8..582f2f5c 100644
  						parm.modulation = qam[data[8]]
  						parm.rolloff = roll[data[9]]
 +						parm.is_id = -1
-+						parm.pls_mode = 0
-+						parm.pls_code = 1
++						parm.pls_mode = eDVBFrontendParametersSatellite.PLS_Unknown
++						parm.pls_code = 0
  						self.tmp_tplist.append(parm)
  					except:	pass
  		self.blindscan_session.close(True)
@@ -656,7 +660,7 @@ index 4dcf6c6b..acb2a2da 100644
 diff --git a/lib/python/Plugins/SystemPlugins/PositionerSetup/plugin.py b/lib/python/Plugins/SystemPlugins/PositionerSetup/plugin.py
 old mode 100644
 new mode 100755
-index b94a8819..32dc8649
+index b94a8819..a9003503
 --- a/lib/python/Plugins/SystemPlugins/PositionerSetup/plugin.py
 +++ b/lib/python/Plugins/SystemPlugins/PositionerSetup/plugin.py
 @@ -10,11 +10,13 @@ from Plugins.Plugin import PluginDescriptor
@@ -680,9 +684,9 @@ index b94a8819..32dc8649
  			cur.get("rolloff", eDVBFrontendParametersSatellite.RollOff_alpha_0_35),
 -			cur.get("pilot", eDVBFrontendParametersSatellite.Pilot_Unknown))
 +			cur.get("pilot", eDVBFrontendParametersSatellite.Pilot_Unknown),
-+			cur.get("is_id", 0),
-+			cur.get("pls_mode", eDVBFrontendParametersSatellite.PLS_Root),
-+			cur.get("pls_code", 1))
++			cur.get("is_id", -1),
++			cur.get("pls_mode", eDVBFrontendParametersSatellite.PLS_Unknown),
++			cur.get("pls_code", 0))
  
  		self.tuner.tune(tp)
  		self.createConfig()
@@ -697,7 +701,7 @@ index b94a8819..32dc8649
  	skin = """
  		<screen position="90,100" size="520,400" title="Tune">
  			<widget name="config" position="20,10" size="460,350" scrollbarMode="showOnDemand" />
-@@ -418,29 +421,38 @@ class TunerScreen(ScanSetup):
+@@ -418,29 +421,40 @@ class TunerScreen(ScanSetup):
  	def __init__(self, session, feid, fe_data):
  		self.feid = feid
  		self.fe_data = fe_data
@@ -712,6 +716,7 @@ index b94a8819..32dc8649
 +		self.scan_sat.system.addNotifier(self.systemChanged)
 +		self.scan_sat.system_dvbs2x.addNotifier(self.systemChanged)
 +		self.scan_sat.is_id_bool.addNotifier(self.isIdChanged, initial_call = False)
++		self.scan_sat.pls_mode.addNotifier(self.plsModeChanged, initial_call = False)
 +
 +		self["actions"] = NumberActionMap(["SetupActions"],
 +		{
@@ -733,6 +738,7 @@ index b94a8819..32dc8649
 +		self.list.append(getConfigListEntry(_('Satellite'), self.tuning.sat)	)
 +
 +		self.is_id_boolEntry = None
++		self.plsModeEntry = None
  		nim = nimmanager.nim_slots[self.feid]
 -		self.systemEntry = None
 -		
@@ -751,7 +757,7 @@ index b94a8819..32dc8649
  			else:
  				# downgrade to dvb-s, in case a -s2 config was active
  				self.scan_sat.system.value = eDVBFrontendParametersSatellite.System_DVB_S
-@@ -471,44 +483,233 @@ class TunerScreen(ScanSetup):
+@@ -471,44 +485,218 @@ class TunerScreen(ScanSetup):
  				self.list.append(self.modulationEntry)
  				self.list.append(getConfigListEntry(_('Roll-off'), self.scan_sat.rolloff))
  				self.list.append(getConfigListEntry(_('Pilot'), self.scan_sat.pilot))
@@ -763,12 +769,10 @@ index b94a8819..32dc8649
 +					self.list.append(self.is_id_boolEntry)
 +					if self.scan_sat.is_id_bool.value:
 +						self.list.append(getConfigListEntry(_('Input Stream ID'), self.scan_sat.is_id))
-+						self.list.append(getConfigListEntry(_('PLS Mode'), self.scan_sat.pls_mode))
-+						self.list.append(getConfigListEntry(_('PLS Code'), self.scan_sat.pls_code))
-+					else:
-+						self.scan_sat.is_id.value = self.NO_STREAM_ID_FILTER
-+						self.scan_sat.pls_mode.value = eDVBFrontendParametersSatellite.PLS_Root
-+						self.scan_sat.pls_code.value = 1
++						self.plsModeEntry = getConfigListEntry(_('PLS Mode'), self.scan_sat.pls_mode)
++						self.list.append(self.plsModeEntry)
++						if self.scan_sat.pls_mode.value != eDVBFrontendParametersSatellite.PLS_Unknown:
++							self.list.append(getConfigListEntry(_('PLS Code'), self.scan_sat.pls_code))
 +		elif self.tuning.type.value == "predefined_transponder":
 +			self.list.append(getConfigListEntry(_("Transponder"), self.tuning.transponder))
  		self["config"].list = self.list
@@ -814,7 +818,6 @@ index b94a8819..32dc8649
 +
 +		self.updateTransponders()
 +
-+		self.NO_STREAM_ID_FILTER = -1
 +		defaultSat = {
 +			"orbpos": 192,
 +			"system": eDVBFrontendParametersSatellite.System_DVB_S,
@@ -831,9 +834,9 @@ index b94a8819..32dc8649
 +			"fec_s2x_32apsk": eDVBFrontendParametersSatellite.FEC_2_3_L,
 +			"modulation": eDVBFrontendParametersSatellite.Modulation_QPSK,
 +			"modulation_s2x": eDVBFrontendParametersSatellite.Modulation_QPSK,
-+			"is_id": self.NO_STREAM_ID_FILTER,
-+			"pls_mode": eDVBFrontendParametersSatellite.PLS_Root,
-+			"pls_code": 1 }
++			"is_id": -1,
++			"pls_mode": eDVBFrontendParametersSatellite.PLS_Unknown,
++			"pls_code": 0 }
 +
 +		if frontendData is not None:
 +			ttype = frontendData.get("tuner_type", "UNKNOWN")
@@ -966,17 +969,14 @@ index b94a8819..32dc8649
 +			(eDVBFrontendParametersSatellite.Pilot_Off, _("Off")),
 +			(eDVBFrontendParametersSatellite.Pilot_On, _("On")),
 +			(eDVBFrontendParametersSatellite.Pilot_Unknown, _("Auto"))])
-+		self.scan_sat.is_id = ConfigInteger(default = defaultSat["is_id"], limits = (self.NO_STREAM_ID_FILTER, 255))
-+		self.scan_sat.is_id_bool = ConfigSelection(default = defaultSat["is_id"] != self.NO_STREAM_ID_FILTER, choices = [(True, _("Multistream")),(False, _("Ordinary"))])
++		self.scan_sat.is_id = ConfigInteger(default = defaultSat["is_id"] if defaultSat["is_id"] != -1 else 0, limits = (0, 255))
++		self.scan_sat.is_id_bool = ConfigSelection(default = defaultSat["is_id"] != -1, choices = [(True, _("Multistream")),(False, _("Ordinary"))])
 +		self.scan_sat.pls_mode = ConfigSelection(default = defaultSat["pls_mode"], choices = [
-+			(eDVBFrontendParametersSatellite.PLS_Root, _("Root")),
-+			(eDVBFrontendParametersSatellite.PLS_Gold, _("Gold")),
-+			(eDVBFrontendParametersSatellite.PLS_Combo, _("Combo"))])
-+		self.scan_sat.pls_code = ConfigInteger(default = defaultSat["pls_code"], limits = (0, 262142))
-+
-+		self.is_id_memory = self.scan_sat.is_id.value # used to prevent is_id value being lost when self.scan_sat.is_id_bool state changes
-+		self.pls_mode_memory = self.scan_sat.pls_mode.value
-+		self.pls_code_memory = self.scan_sat.pls_code.value
++				(eDVBFrontendParametersSatellite.PLS_Root, _("Root")),
++				(eDVBFrontendParametersSatellite.PLS_Gold, _("Gold")),
++				(eDVBFrontendParametersSatellite.PLS_Combo, _("Combo")),
++				(eDVBFrontendParametersSatellite.PLS_Unknown, _("Auto"))])
++		self.scan_sat.pls_code = ConfigInteger(default = defaultSat["pls_code"], limits = (0, 262143))
  
  	def tuningSatChanged(self, *parm):
  		self.updateTransponders()
@@ -989,18 +989,9 @@ index b94a8819..32dc8649
 +		self.createSetup()
 +
 +	def isIdChanged(self, *parm):
-+		if self.is_id_boolEntry:
-+			if self.is_id_boolEntry[1].value:
-+				self.scan_sat.is_id.value = 0 if self.is_id_memory < 0 else self.is_id_memory
-+				self.scan_sat.pls_mode.value = self.pls_mode_memory
-+				self.scan_sat.pls_code.value = self.pls_code_memory
-+			else:
-+				self.is_id_memory = self.scan_sat.is_id.value
-+				self.pls_mode_memory = self.scan_sat.pls_mode.value
-+				self.pls_code_memory = self.scan_sat.pls_code.value
-+				self.scan_sat.is_id.value = self.NO_STREAM_ID_FILTER
-+				self.scan_sat.pls_mode.value = eDVBFrontendParametersSatellite.PLS_Root
-+				self.scan_sat.pls_code.value = 1
++		self.createSetup()
++
++	def plsModeChanged(self, *parm):
 +		self.createSetup()
  
  	def updateTransponders(self):
@@ -1011,7 +1002,7 @@ index b94a8819..32dc8649
  			tps = []
  			cnt=0
  			for x in transponderlist:
-@@ -534,13 +735,19 @@ class TunerScreen(ScanSetup):
+@@ -534,13 +722,19 @@ class TunerScreen(ScanSetup):
  				else:
  					fec = fec_desc[x[4]]
  				tps.append(str(x[1]) + "," + str(x[2]) + "," + pol + "," + fec)
@@ -1027,7 +1018,7 @@ index b94a8819..32dc8649
  	def keyGo(self):
 -		returnvalue = (0, 0, 0, 0, 0, 0, 0, 0, 0, 0)
 -		satpos = int(tuning.sat.value)
-+		returnvalue = (0, 0, 0, 0, 0, 0, 0, 0, 0, 0, -1, 0, 1)
++		returnvalue = (0, 0, 0, 0, 0, 0, 0, 0, 0, 0, -1, 3, 0)
 +		satpos = int(self.tuning.sat.value)
  		nim = nimmanager.nim_slots[self.feid]
 -		if tuning.type.value == "manual_transponder":
@@ -1035,16 +1026,27 @@ index b94a8819..32dc8649
  			system = self.scan_sat.system.value
  			modulation = self.scan_sat.modulation.value
  			if nim.isCompatible("DVB-S2X"):
-@@ -563,7 +770,7 @@ class TunerScreen(ScanSetup):
+@@ -563,7 +757,18 @@ class TunerScreen(ScanSetup):
  				elif modulation == eDVBFrontendParametersSatellite.Modulation_32APSK:
  					fec = self.scan_sat.fec_s2x_32apsk.value
  			else:
 -				fec = self.scan_sat.fec_s2.value
 +				fec = self.scan_sat.fec.value
++
++			is_id = -1
++			pls_mode = eDVBFrontendParametersSatellite.PLS_Unknown
++			pls_code = 0
++			if self.scan_sat.is_id_bool.value:
++				is_id = self.scan_sat.is_id.value
++				pls_mode = self.scan_sat.pls_mode.value
++				if pls_mode == eDVBFrontendParametersSatellite.PLS_Unknown:
++					pls_code = 0
++				else:
++					pls_code = self.scan_sat.pls_code.value
  
  			returnvalue = (
  				self.scan_sat.frequency.value,
-@@ -575,11 +782,14 @@ class TunerScreen(ScanSetup):
+@@ -575,11 +780,14 @@ class TunerScreen(ScanSetup):
  				system,
  				modulation,
  				self.scan_sat.rolloff.value,
@@ -1052,9 +1054,9 @@ index b94a8819..32dc8649
 -		elif tuning.type.value == "predefined_transponder":
 -			transponder = nimmanager.getTransponders(satpos)[tuning.transponder.index]
 +				self.scan_sat.pilot.value,
-+				self.scan_sat.is_id.value,
-+				self.scan_sat.pls_mode.value,
-+				self.scan_sat.pls_code.value)
++				is_id,
++				pls_mode,
++				pls_code)
 +		elif self.tuning.type.value == "predefined_transponder":
 +			transponder = nimmanager.getTransponders(satpos)[self.tuning.transponder.index]
  			returnvalue = (transponder[1] / 1000, transponder[2] / 1000,
@@ -1064,16 +1066,19 @@ index b94a8819..32dc8649
  
  	def keyCancel(self):
 diff --git a/lib/python/Plugins/SystemPlugins/Satfinder/plugin.py b/lib/python/Plugins/SystemPlugins/Satfinder/plugin.py
-index a87ca26f..402c8770 100644
+old mode 100644
+new mode 100755
+index a87ca26f..ad1c450b
 --- a/lib/python/Plugins/SystemPlugins/Satfinder/plugin.py
 +++ b/lib/python/Plugins/SystemPlugins/Satfinder/plugin.py
-@@ -59,17 +59,15 @@ class Satfinder(ScanSetup):
+@@ -59,17 +59,16 @@ class Satfinder(ScanSetup):
  	def createSetup(self):
  		self.typeOfTuningEntry = None
  		self.satEntry = None
 -		
 +		self.systemEntry = None
 +		self.is_id_boolEntry = None
++		self.plsModeEntry = None
  		self.list = []
 -
  		self.typeOfTuningEntry = getConfigListEntry(_('Tune'), self.tuning_type)
@@ -1087,7 +1092,7 @@ index a87ca26f..402c8770 100644
  		if self.tuning_type.value == "manual_transponder":
  			scan_sat_system_value = self.scan_sat.system.value
  			if nim.isCompatible("DVB-S2X"):
-@@ -109,6 +107,18 @@ class Satfinder(ScanSetup):
+@@ -109,6 +108,16 @@ class Satfinder(ScanSetup):
  				self.list.append(self.modulationEntry)
  				self.list.append(getConfigListEntry(_('Roll-off'), self.scan_sat.rolloff))
  				self.list.append(getConfigListEntry(_('Pilot'), self.scan_sat.pilot))
@@ -1097,56 +1102,63 @@ index a87ca26f..402c8770 100644
 +					self.list.append(self.is_id_boolEntry)
 +					if self.scan_sat.is_id_bool.value:
 +						self.list.append(getConfigListEntry(_('Input Stream ID'), self.scan_sat.is_id))
-+						self.list.append(getConfigListEntry(_('PLS Mode'), self.scan_sat.pls_mode))
-+						self.list.append(getConfigListEntry(_('PLS Code'), self.scan_sat.pls_code))
-+				else:
-+					self.scan_sat.is_id.value = self.NO_STREAM_ID_FILTER
-+					self.scan_sat.pls_mode.value = eDVBFrontendParametersSatellite.PLS_Root
-+					self.scan_sat.pls_code.value = 1
++						self.plsModeEntry = getConfigListEntry(_('PLS Mode'), self.scan_sat.pls_mode)
++						self.list.append(self.plsModeEntry)
++						if self.scan_sat.pls_mode.value != eDVBFrontendParametersSatellite.PLS_Unknown:
++							self.list.append(getConfigListEntry(_('PLS Code'), self.scan_sat.pls_code))
  		elif self.tuning_transponder and self.tuning_type.value == "predefined_transponder":
  			self.list.append(getConfigListEntry(_("Transponder"), self.tuning_transponder))
  		self["config"].list = self.list
-@@ -124,13 +134,26 @@ class Satfinder(ScanSetup):
- 		elif self.modulationEntry and (cur == self.modulationEntry) and \
- 			self.systemEntry and (self.systemEntry[1].value == eDVBFrontendParametersSatellite.System_DVB_S2X):
- 			self.createSetup()
-+		elif cur == self.is_id_boolEntry:
-+			if self.is_id_boolEntry[1].value:
-+				self.scan_sat.is_id.value = 0 if self.is_id_memory < 0 else self.is_id_memory
-+				self.scan_sat.pls_mode.value = self.pls_mode_memory
-+				self.scan_sat.pls_code.value = self.pls_code_memory
-+			else:
-+				self.is_id_memory = self.scan_sat.is_id.value
-+				self.pls_mode_memory = self.scan_sat.pls_mode.value
-+				self.pls_code_memory = self.scan_sat.pls_code.value
-+				self.scan_sat.is_id.value = self.NO_STREAM_ID_FILTER
-+				self.scan_sat.pls_mode.value = eDVBFrontendParametersSatellite.PLS_Root
-+				self.scan_sat.pls_code.value = 1
-+			self.createSetup()
+@@ -116,7 +125,7 @@ class Satfinder(ScanSetup):
  
- 	def sat_changed(self, config_element):
- 		self.newConfig()
+ 	def newConfig(self):
+ 		cur = self["config"].getCurrent()
+-		if cur in (self.typeOfTuningEntry, self.systemEntry):
++		if cur in (self.typeOfTuningEntry, self.systemEntry, self.is_id_boolEntry, self.plsModeEntry):
+ 			self.createSetup()
+ 		elif cur == self.satEntry:
+ 			self.updateSats()
+@@ -130,7 +139,7 @@ class Satfinder(ScanSetup):
  		self.retune(config_element)
  
  	def retune(self, configElement):
 -		returnvalue = (0, 0, 0, 0, 0, 0, 0, 0, 0, 0)
-+		returnvalue = (0, 0, 0, 0, 0, 0, 0, 0, 0, 0, -1, 0, 1)
++		returnvalue = (0, 0, 0, 0, 0, 0, 0, 0, 0, 0, -1, 3, 0)
  		satpos = int(self.tuning_sat.value)
  		nim = nimmanager.nim_slots[self.feid]
  		if self.tuning_type.value == "manual_transponder":
-@@ -165,7 +188,10 @@ class Satfinder(ScanSetup):
+@@ -155,6 +164,18 @@ class Satfinder(ScanSetup):
+ 					fec = self.scan_sat.fec_s2x_16apsk.value
+ 				elif modulation == eDVBFrontendParametersSatellite.Modulation_32APSK:
+ 					fec = self.scan_sat.fec_s2x_32apsk.value
++
++			is_id = -1
++			pls_mode = eDVBFrontendParametersSatellite.PLS_Unknown
++			pls_code = 0
++			if self.scan_sat.is_id_bool.value:
++				is_id = self.scan_sat.is_id.value
++				pls_mode = self.scan_sat.pls_mode.value
++				if pls_mode == eDVBFrontendParametersSatellite.PLS_Unknown:
++					pls_code = 0
++				else:
++					pls_code = self.scan_sat.pls_code.value
++
+ 			returnvalue = (
+ 				self.scan_sat.frequency.value,
+ 				self.scan_sat.symbolrate.value,
+@@ -165,7 +186,10 @@ class Satfinder(ScanSetup):
  				system,
  				modulation,
  				self.scan_sat.rolloff.value,
 -				self.scan_sat.pilot.value)
 +				self.scan_sat.pilot.value,
-+				self.scan_sat.is_id.value,
-+				self.scan_sat.pls_mode.value,
-+				self.scan_sat.pls_code.value)
++				is_id,
++				pls_mode,
++				pls_code)
  			self.tune(returnvalue)
  		elif self.tuning_type.value == "predefined_transponder":
  			tps = nimmanager.getTransponders(satpos)
-@@ -173,7 +199,7 @@ class Satfinder(ScanSetup):
+@@ -173,7 +197,7 @@ class Satfinder(ScanSetup):
  			if l > self.tuning_transponder.index:
  				transponder = tps[self.tuning_transponder.index]
  				returnvalue = (transponder[1] / 1000, transponder[2] / 1000,
@@ -1155,18 +1167,20 @@ index a87ca26f..402c8770 100644
  				self.tune(returnvalue)
  
  	def createConfig(self, foo):
-@@ -188,7 +214,8 @@ class Satfinder(ScanSetup):
+@@ -188,7 +212,8 @@ class Satfinder(ScanSetup):
  			self.scan_sat.inversion, self.scan_sat.symbolrate,
  			self.scan_sat.polarization, self.scan_sat.fec, self.scan_sat.pilot,
  			self.scan_sat.fec_s2, self.scan_sat.fec, self.scan_sat.modulation,
 -			self.scan_sat.rolloff, self.scan_sat.system]
 +			self.scan_sat.rolloff, self.scan_sat.system,
-+			self.scan_sat.is_id, self.scan_sat.pls_mode, self.scan_sat.pls_code]
++			self.scan_sat.is_id_bool, self.scan_sat.is_id, self.scan_sat.pls_mode, self.scan_sat.pls_code]
  
  		nim = nimmanager.nim_slots[self.feid]
  		if nim.isCompatible("DVB-S2X"):
 diff --git a/lib/python/Screens/ScanSetup.py b/lib/python/Screens/ScanSetup.py
-index b7f57887..e1844458 100644
+old mode 100644
+new mode 100755
+index b7f57887..fa3126b0
 --- a/lib/python/Screens/ScanSetup.py
 +++ b/lib/python/Screens/ScanSetup.py
 @@ -49,6 +49,9 @@ def getInitialTransponderList(tlist, pos):
@@ -1179,15 +1193,16 @@ index b7f57887..e1844458 100644
  			tlist.append(parm)
  
  def getInitialCableTransponderList(tlist, nim):
-@@ -587,6 +590,7 @@ class ScanSetup(ConfigListScreen, Screen, CableTransponderSearchSupport, Terrest
+@@ -587,6 +590,8 @@ class ScanSetup(ConfigListScreen, Screen, CableTransponderSearchSupport, Terrest
  		self.typeOfScanEntry = None
  		self.systemEntry = None
  		self.modulationEntry = None
 +		self.is_id_boolEntry = None
++		self.plsModeEntry = None
  		nim = nimmanager.nim_slots[index_to_scan]
  		if nim.isCompatible("DVB-S"):
  			self.typeOfScanEntry = getConfigListEntry(_("Type of scan"), self.scan_type)
-@@ -647,6 +651,18 @@ class ScanSetup(ConfigListScreen, Screen, CableTransponderSearchSupport, Terrest
+@@ -647,6 +652,17 @@ class ScanSetup(ConfigListScreen, Screen, CableTransponderSearchSupport, Terrest
  					elif self.scan_sat.modulation_dvbs2x.value == eDVBFrontendParametersSatellite.Modulation_32APSK:
  						self.list.append(getConfigListEntry(_("FEC"), self.scan_sat.fec_s2x_32apsk))
  
@@ -1197,51 +1212,38 @@ index b7f57887..e1844458 100644
 +						self.list.append(self.is_id_boolEntry)
 +						if self.scan_sat.is_id_bool.value:
 +							self.list.append(getConfigListEntry(_('Input Stream ID'), self.scan_sat.is_id))
-+							self.list.append(getConfigListEntry(_('PLS Mode'), self.scan_sat.pls_mode))
-+							self.list.append(getConfigListEntry(_('PLS Code'), self.scan_sat.pls_code))
-+					else:
-+						self.scan_sat.is_id.value = self.NO_STREAM_ID_FILTER
-+						self.scan_sat.pls_mode.value = eDVBFrontendParametersSatellite.PLS_Root
-+						self.scan_sat.pls_code.value = 1
++							self.plsModeEntry = getConfigListEntry(_('PLS Mode'), self.scan_sat.pls_mode)
++							self.list.append(self.plsModeEntry)
++							if self.scan_sat.pls_mode.value != eDVBFrontendParametersSatellite.PLS_Unknown:
++								self.list.append(getConfigListEntry(_('PLS Code'), self.scan_sat.pls_code))
++
  			elif self.scan_type.value == "single_satellite":
  				self.updateSatList()
  				print self.scan_satselection[index_to_scan]
-@@ -723,8 +739,22 @@ class ScanSetup(ConfigListScreen, Screen, CableTransponderSearchSupport, Terrest
+@@ -721,7 +737,9 @@ class ScanSetup(ConfigListScreen, Screen, CableTransponderSearchSupport, Terrest
+ 			cur == self.systemEntry or \
+ 			(self.modulationEntry and \
  			(self.systemEntry[1].value in (eDVBFrontendParametersSatellite.System_DVB_S2, eDVBFrontendParametersSatellite.System_DVB_S2X)) and \
- 			cur == self.modulationEntry):
+-			cur == self.modulationEntry):
++			cur == self.modulationEntry) or \
++			cur == self.is_id_boolEntry or \
++			cur == self.plsModeEntry:
  			self.createSetup()
-+		elif cur == self.is_id_boolEntry:
-+			if self.is_id_boolEntry[1].value:
-+				self.scan_sat.is_id.value = 0 if self.is_id_memory < 0 else self.is_id_memory
-+				self.scan_sat.pls_mode.value = self.pls_mode_memory
-+				self.scan_sat.pls_code.value = self.pls_code_memory
-+			else:
-+				self.is_id_memory = self.scan_sat.is_id.value
-+				self.pls_mode_memory = self.scan_sat.pls_mode.value
-+				self.pls_code_memory = self.scan_sat.pls_code.value
-+				self.scan_sat.is_id.value = self.NO_STREAM_ID_FILTER
-+				self.scan_sat.pls_mode.value = eDVBFrontendParametersSatellite.PLS_Root
-+				self.scan_sat.pls_code.value = 1
-+			self.createSetup()
  
  	def createConfig(self, frontendData):
-+			self.NO_STREAM_ID_FILTER = -1
- 			defaultSat = {
- 				"orbpos": 192,
- 				"system": eDVBFrontendParametersSatellite.System_DVB_S,
-@@ -740,7 +770,10 @@ class ScanSetup(ConfigListScreen, Screen, CableTransponderSearchSupport, Terrest
+@@ -740,7 +758,10 @@ class ScanSetup(ConfigListScreen, Screen, CableTransponderSearchSupport, Terrest
  				"fec_s2x_16apsk": eDVBFrontendParametersSatellite.FEC_1_2_L,
  				"fec_s2x_32apsk": eDVBFrontendParametersSatellite.FEC_2_3_L,
  				"modulation": eDVBFrontendParametersSatellite.Modulation_QPSK,
 -				"modulation_s2x": eDVBFrontendParametersSatellite.Modulation_QPSK}
 +				"modulation_s2x": eDVBFrontendParametersSatellite.Modulation_QPSK,
-+				"is_id": self.NO_STREAM_ID_FILTER,
-+				"pls_mode": eDVBFrontendParametersSatellite.PLS_Root,
-+				"pls_code": 1 }
++				"is_id": -1,
++				"pls_mode": eDVBFrontendParametersSatellite.PLS_Unknown,
++				"pls_code": 0 }
  			defaultCab = {
  				"frequency": 466,
  				"inversion": eDVBFrontendParametersCable.Inversion_Unknown,
-@@ -795,6 +828,9 @@ class ScanSetup(ConfigListScreen, Screen, CableTransponderSearchSupport, Terrest
+@@ -795,6 +816,9 @@ class ScanSetup(ConfigListScreen, Screen, CableTransponderSearchSupport, Terrest
  					if defaultSat["system"] in (eDVBFrontendParametersSatellite.System_DVB_S2, eDVBFrontendParametersSatellite.System_DVB_S2X):
  						defaultSat["rolloff"] = frontendData.get("rolloff", eDVBFrontendParametersSatellite.RollOff_alpha_0_35)
  						defaultSat["pilot"] = frontendData.get("pilot", eDVBFrontendParametersSatellite.Pilot_Unknown)
@@ -1251,25 +1253,22 @@ index b7f57887..e1844458 100644
  
  				elif ttype == "DVB-C":
  					defaultCab["frequency"] = frontendData.get("frequency", 0) / 1000
-@@ -943,6 +979,17 @@ class ScanSetup(ConfigListScreen, Screen, CableTransponderSearchSupport, Terrest
+@@ -943,6 +967,14 @@ class ScanSetup(ConfigListScreen, Screen, CableTransponderSearchSupport, Terrest
  				(eDVBFrontendParametersSatellite.Pilot_Off, _("Off")),
  				(eDVBFrontendParametersSatellite.Pilot_On, _("On")),
  				(eDVBFrontendParametersSatellite.Pilot_Unknown, _("Auto"))])
-+			self.scan_sat.is_id = ConfigInteger(default = defaultSat["is_id"], limits = (self.NO_STREAM_ID_FILTER, 255))
-+			self.scan_sat.is_id_bool = ConfigSelection(default = defaultSat["is_id"] != self.NO_STREAM_ID_FILTER, choices = [(True, _("Multistream")),(False, _("Ordinary"))])
++			self.scan_sat.is_id = ConfigInteger(default = defaultSat["is_id"] if defaultSat["is_id"] != -1 else 0, limits = (0, 255))
++			self.scan_sat.is_id_bool = ConfigSelection(default = defaultSat["is_id"] != -1, choices = [(True, _("Multistream")),(False, _("Ordinary"))])
 +			self.scan_sat.pls_mode = ConfigSelection(default = defaultSat["pls_mode"], choices = [
 +				(eDVBFrontendParametersSatellite.PLS_Root, _("Root")),
 +				(eDVBFrontendParametersSatellite.PLS_Gold, _("Gold")),
-+				(eDVBFrontendParametersSatellite.PLS_Combo, _("Combo"))])
-+			self.scan_sat.pls_code = ConfigInteger(default = defaultSat["pls_code"], limits = (0, 262142))
-+			
-+			self.is_id_memory = self.scan_sat.is_id.value # used to prevent is_id value being lost when self.scan_sat.is_id_bool state changes
-+			self.pls_mode_memory = self.scan_sat.pls_mode.value
-+			self.pls_code_memory = self.scan_sat.pls_code.value
++				(eDVBFrontendParametersSatellite.PLS_Combo, _("Combo")),
++				(eDVBFrontendParametersSatellite.PLS_Unknown, _("Auto"))])
++			self.scan_sat.pls_code = ConfigInteger(default = defaultSat["pls_code"], limits = (0, 262143))
  
  			# cable
  			self.scan_cab.frequency = ConfigInteger(default = defaultCab["frequency"], limits = (50, 999))
-@@ -1092,8 +1139,8 @@ class ScanSetup(ConfigListScreen, Screen, CableTransponderSearchSupport, Terrest
+@@ -1092,8 +1124,8 @@ class ScanSetup(ConfigListScreen, Screen, CableTransponderSearchSupport, Terrest
  	def updateStatus(self):
  		print "updatestatus"
  
@@ -1280,7 +1279,7 @@ index b7f57887..e1844458 100644
  		print "orbpos: " + str(orbital_position)
  		parm = eDVBFrontendParametersSatellite()
  		parm.modulation = modulation
-@@ -1106,6 +1153,9 @@ class ScanSetup(ConfigListScreen, Screen, CableTransponderSearchSupport, Terrest
+@@ -1106,6 +1138,9 @@ class ScanSetup(ConfigListScreen, Screen, CableTransponderSearchSupport, Terrest
  		parm.orbital_position = orbital_position
  		parm.rolloff = rolloff
  		parm.pilot = pilot
@@ -1290,15 +1289,33 @@ index b7f57887..e1844458 100644
  		tlist.append(parm)
  
  	def addCabTransponder(self, tlist, frequency, symbol_rate, modulation, fec, inversion):
-@@ -1188,7 +1238,10 @@ class ScanSetup(ConfigListScreen, Screen, CableTransponderSearchSupport, Terrest
+@@ -1178,6 +1213,17 @@ class ScanSetup(ConfigListScreen, Screen, CableTransponderSearchSupport, Terrest
+ 					else:
+ 						fec = self.scan_sat.fec_s2.value
+ 
++					is_id = -1
++					pls_mode = eDVBFrontendParametersSatellite.PLS_Unknown
++					pls_code = 0
++					if self.scan_sat.is_id_bool.value:
++						is_id = self.scan_sat.is_id.value
++						pls_mode = self.scan_sat.pls_mode.value
++						if pls_mode == eDVBFrontendParametersSatellite.PLS_Unknown:
++							pls_code = 0
++						else:
++							pls_code = self.scan_sat.pls_code.value
++
+ 					print "add sat transponder"
+ 					self.addSatTransponder(tlist, self.scan_sat.frequency.value,
+ 								self.scan_sat.symbolrate.value,
+@@ -1188,7 +1234,10 @@ class ScanSetup(ConfigListScreen, Screen, CableTransponderSearchSupport, Terrest
  								system,
  								modulation,
  								self.scan_sat.rolloff.value,
 -								self.scan_sat.pilot.value)
 +								self.scan_sat.pilot.value,
-+								self.scan_sat.is_id.value,
-+								self.scan_sat.pls_mode.value,
-+								self.scan_sat.pls_code.value)
++								is_id,
++								pls_mode,
++								pls_code)
  				removeAll = False
  			elif self.scan_type.value == "single_satellite":
  				sat = self.satList[index_to_scan][self.scan_satselection[index_to_scan].index]
@@ -1319,7 +1336,9 @@ index ffd288f3..5a52028c 100644
  				return ((_("NIM"), chr(ord('A')+int(frontendData["tuner_number"])), TYPE_TEXT),
  						(_("Type"), frontendData["tuner_type"], TYPE_TEXT),
 diff --git a/lib/python/Tools/Transponder.py b/lib/python/Tools/Transponder.py
-index 2b46d0e6..08109b63 100644
+old mode 100644
+new mode 100755
+index 2b46d0e6..dffc3d26
 --- a/lib/python/Tools/Transponder.py
 +++ b/lib/python/Tools/Transponder.py
 @@ -69,6 +69,17 @@ def ConvertToHumanReadable(tp, type = None):
@@ -1330,7 +1349,7 @@ index 2b46d0e6..08109b63 100644
 +				eDVBFrontendParametersSatellite.PLS_Root : _("Root"),
 +				eDVBFrontendParametersSatellite.PLS_Gold : _("Gold"),
 +				eDVBFrontendParametersSatellite.PLS_Combo : _("Combo"),
-+				eDVBFrontendParametersSatellite.PLS_Unknown : _("Unknown")}.get(tp.get("pls_mode"))
++				eDVBFrontendParametersSatellite.PLS_Unknown : _("Auto")}.get(tp.get("pls_mode"))
 +			#ret["is_id"] = tp.get("is_id")
 +			#ret["pls_code"] = tp.get("pls_code")
 +		else:
