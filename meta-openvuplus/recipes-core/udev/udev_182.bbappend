@@ -1,9 +1,10 @@
-PR .= "-vuplus5"
+PR .= "-vuplus6"
 
 SRC_URI += " \
 	file://99_vuplus.rules \
 	file://automount.py \
 	file://autoumount.py \
+	file://udev_scan_sys_block.patch \
 "
 
 do_install_append () {

@@ -1,0 +1,51 @@
+diff --git a/src/libudev-enumerate.c b/src/libudev-enumerate.c
+index 034d96f..ca7f068 100644
+--- a/src/libudev-enumerate.c
++++ b/src/libudev-enumerate.c
+@@ -730,6 +730,30 @@ static int scan_dir(struct udev_enumerate *udev_enumerate, const char *basedir,
+         return 0;
+ }
+ 
++static int scan_dir_block(struct udev_enumerate *udev_enumerate)
++{
++        struct udev *udev = udev_enumerate_get_udev(udev_enumerate);
++
++        char path[UTIL_PATH_SIZE];
++        DIR *dir;
++        struct dirent *dent;
++		const char *basedir = "block";
++
++        util_strscpyl(path, sizeof(path), udev_get_sys_path(udev), "/", basedir, NULL);
++        dir = opendir(path);
++        if (dir == NULL)
++                return -1;
++        for (dent = readdir(dir); dent != NULL; dent = readdir(dir)) {
++                if (dent->d_name[0] == '.')
++                        continue;
++                if ((dent->d_name[0] != 's') || (dent->d_name[1] != 'd'))
++                        continue;
++                scan_dir_and_add_devices(udev_enumerate, basedir, dent->d_name, NULL);
++        }
++        closedir(dir);
++        return 0;
++}
++
+ /**
+  * udev_enumerate_add_syspath:
+  * @udev_enumerate: context
+@@ -877,6 +901,15 @@ static int scan_devices_all(struct udev_enumerate *udev_enumerate)
+                 scan_dir(udev_enumerate, "bus", "devices", NULL);
+                 dbg(udev, "searching '/class/*' dir\n");
+                 scan_dir(udev_enumerate, "class", NULL, NULL);
++                {
++                    char tmp[UTIL_PATH_SIZE];
++                    util_strscpyl(tmp, sizeof(tmp), udev_get_sys_path(udev), "/class/block", NULL);
++                    if (stat(tmp, &statbuf) != 0)
++                    {
++                            dbg(udev, "searching %s/*\n", tmp);
++                            scan_dir_block(udev_enumerate);
++                    }
++                }
+         }
+         return 0;
+ }
