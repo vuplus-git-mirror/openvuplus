@@ -2,7 +2,7 @@ require linux-vuplus-3.14.28.inc
 
 COMPATIBLE_MACHINE = "^(vuuno4k)$"
 
-PR = "${INC_PR}.8"
+PR = "${INC_PR}.9"
 
 SRC_URI = "http://archive.vuplus.com/download/kernel/stblinux-3.14-1.12.tar.bz2 \
     file://${KERNEL_CONFIG} \
