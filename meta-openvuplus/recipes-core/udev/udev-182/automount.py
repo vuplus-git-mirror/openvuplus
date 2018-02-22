@@ -39,11 +39,24 @@ def isMountedByDevName(devName):
 	return ismounted
 
 def isUsbDevice(dev_base):
-	phyPath = os.path.realpath('/sys/block/' + dev_base)
+	phyPath = os.path.realpath('/sys/block/' + dev_base + '/device')
 	for x in glob.glob("/sys/bus/usb/devices/usb*"):
 		if phyPath.find(os.path.realpath(x)) != -1:
 			return True
 	return False
+
+def checkFilesystem(device):
+	p = os.popen("blkid %s" % device)
+	data = p.read()
+	p.close()
+
+	fs = None
+	for x in data.split():
+		if x.startswith('TYPE') and x.find('=') != -1:
+			fs = x.split('=')[1].strip('"')
+			break
+
+	return fs
 
 def automount():
 	kernel = sys.argv[1]
@@ -84,7 +97,15 @@ def automount():
 		if not os.access(mountPoint, os.F_OK):
 			return
 
-	if os.system("mount -t auto -o noatime %s %s" % (dev_kernel, mountPoint)):
+	fs = checkFilesystem(dev_kernel)
+	if fs == "ntfs":
+		cmd = "mount.ntfs-3g %s %s" % (dev_kernel, mountPoint)
+	else:
+		cmd = "mount -t auto -o noatime %s %s" % (dev_kernel, mountPoint)
+
+	ret = os.system(cmd)
+
+	if ret:
 		os.rmdir(mountPoint)
 	else:
 		if mountPoint == "/media/hdd":
