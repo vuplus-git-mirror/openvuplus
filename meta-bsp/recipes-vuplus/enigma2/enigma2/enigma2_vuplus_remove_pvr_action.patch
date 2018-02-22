@@ -1,5 +1,5 @@
 diff --git a/RecordTimer.py b/RecordTimer.py
-index 58ef5b3..d3c0bbf 100755
+index 763ee8ca3..6f7acfa18 100755
 --- a/RecordTimer.py
 +++ b/RecordTimer.py
 @@ -4,6 +4,7 @@ from enigma import eEPGCache, getBestPlayableServiceReference, \
@@ -10,7 +10,7 @@ index 58ef5b3..d3c0bbf 100755
  
  from Screens.MessageBox import MessageBox
  import Screens.Standby
-@@ -114,7 +115,10 @@ class RecordTimerEntry(timer.TimerEntry, object):
+@@ -135,7 +136,10 @@ class RecordTimerEntry(timer.TimerEntry, object):
  		self.timer = None
  		self.__record_service = None
  		self.start_prepare = 0
@@ -22,7 +22,7 @@ index 58ef5b3..d3c0bbf 100755
  		self.afterEvent = afterEvent
  		self.dirname = dirname
  		self.dirnameHadToFallback = False
-@@ -417,7 +421,10 @@ def createTimer(xml):
+@@ -460,7 +464,10 @@ def createTimer(xml):
  	description = xml.get("description").encode("utf-8")
  	repeated = xml.get("repeated").encode("utf-8")
  	disabled = long(xml.get("disabled") or "0")
@@ -34,7 +34,7 @@ index 58ef5b3..d3c0bbf 100755
  	afterevent = str(xml.get("afterevent") or "nothing")
  	afterevent = {
  		"nothing": AFTEREVENT.NONE,
-@@ -603,7 +610,10 @@ class RecordTimer(timer.Timer):
+@@ -658,7 +665,10 @@ class RecordTimer(timer.Timer):
  			if timer.tags is not None:
  				list.append(' tags="' + str(stringToXML(' '.join(timer.tags))) + '"')
  			list.append(' disabled="' + str(int(timer.disabled)) + '"')
@@ -47,7 +47,7 @@ index 58ef5b3..d3c0bbf 100755
  			
  			if config.recording.debug.value:
 diff --git a/data/menu.xml b/data/menu.xml
-index a71c036..0340a8c 100755
+index a71c0367c..0340a8ce9 100755
 --- a/data/menu.xml
 +++ b/data/menu.xml
 @@ -71,7 +71,7 @@
@@ -60,7 +60,7 @@ index a71c036..0340a8c 100755
  			<item weight="10" level="1" text="Common Interface" entryID="ci_setup" requires="CommonInterface"><screen module="Ci" screen="CiSelection" /></item>
  			<item weight="15" level="0" text="Parental control" entryID="parental_setup"><screen module="ParentalControlSetup" screen="ParentalControlSetup" /></item>
 diff --git a/data/setup.xml b/data/setup.xml
-index 8e42c57..99b0a92 100755
+index 8e42c578c..99b0a92d6 100755
 --- a/data/setup.xml
 +++ b/data/setup.xml
 @@ -22,11 +22,11 @@
@@ -81,17 +81,17 @@ index 8e42c57..99b0a92 100755
  			<item level="1" text="Show positioner movement">config.usage.showdish</item>
  			<item level="1" text="Enable multiple bouquets">config.usage.multibouquet</item>
 diff --git a/lib/python/Components/SystemInfo.py b/lib/python/Components/SystemInfo.py
-index a1f0d6f..b7d7119 100755
+index 5b01c4cbe..205a68e38 100644
 --- a/lib/python/Components/SystemInfo.py
 +++ b/lib/python/Components/SystemInfo.py
-@@ -34,4 +34,5 @@ SystemInfo["WOWLSupport"] = HardwareInfo().get_vu_device_name() == "ultimo4k"
- SystemInfo["ScrambledPlayback"] = HardwareInfo().get_vu_device_name() in ("solo4k", "ultimo4k")
+@@ -35,4 +35,4 @@ SystemInfo["ScrambledPlayback"] = HardwareInfo().get_vu_device_name() in ("solo4
  SystemInfo["FastChannelChange"] =  fileExists("/proc/stb/frontend/fbc/fcc")
  SystemInfo["MiniTV"] = fileExists("/proc/stb/lcd/live_enable")
+ SystemInfo["DisableUsbRecord"] = HardwareInfo().get_vu_device_name() in ("solo4k", "uno4kse", "zero4k")
+-
 +SystemInfo["PVRSupport"] = HardwareInfo().get_vu_device_name() not in ["solose", "zero", "uno4k"]
- 
 diff --git a/lib/python/Screens/InfoBarGenerics.py b/lib/python/Screens/InfoBarGenerics.py
-index cebebf5..89e146e 100755
+index 7e30af7b8..c91927265 100755
 --- a/lib/python/Screens/InfoBarGenerics.py
 +++ b/lib/python/Screens/InfoBarGenerics.py
 @@ -235,7 +235,7 @@ class InfoBarNumberZap:
@@ -121,7 +121,7 @@ index cebebf5..89e146e 100755
  		self["TimeshiftActivateActions"] = ActionMap(["InfobarTimeshiftActivateActions"],
  			{
  				"timeshiftActivateEnd": self.activateTimeshiftEnd, # something like "rewind key"
-@@ -1529,10 +1530,11 @@ class InfoBarInstantRecord:
+@@ -1534,10 +1535,11 @@ class InfoBarInstantRecord:
  	"""Instant Record - handles the instantRecord action in order to
  	start/stop instant records"""
  	def __init__(self):
@@ -138,7 +138,7 @@ index cebebf5..89e146e 100755
  
  	def stopCurrentRecording(self, entry = -1):
 diff --git a/lib/python/Screens/TimerEntry.py b/lib/python/Screens/TimerEntry.py
-index c3e71c7..5ee9e41 100644
+index c3e71c775..5ee9e414b 100644
 --- a/lib/python/Screens/TimerEntry.py
 +++ b/lib/python/Screens/TimerEntry.py
 @@ -94,7 +94,12 @@ class TimerEntry(Screen, ConfigListScreen):

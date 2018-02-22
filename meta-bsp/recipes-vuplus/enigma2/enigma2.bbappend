@@ -1,6 +1,6 @@
 FILESEXTRAPATHS_prepend := "${THISDIR}/${PN}:"
 
-PR .= "-bsp25"
+PR .= "-bsp26"
 
 SRC_URI_append_vusolo = " \
 	file://enigma2_vuplus_misc.patch \
@@ -29,7 +29,6 @@ SRC_URI_append_vusolo4k = " \
 	file://skin_user_vusolo4k.xml \
 	file://lcd_icons_vusolo4k \
 	file://vu_hd_1080p_default.patch \
-	file://enigma2_vuplus_check_recording.patch \
 "
 
 SRC_URI_append_vuultimo4k = " \
@@ -40,9 +39,9 @@ SRC_URI_append_vuultimo4k = " \
 "
 
 SRC_URI_append_vuuno4k = " \
-	file://enigma2_vuplus_remove_pvr_action.patch \
 	file://vu_hd_1080p_default.patch \
 	file://enigma2_vuplus_uianimation_speed.patch \
+	file://enigma2_vuplus_remove_pvr_action.patch \
 "
 
 SRC_URI_append_vuuno4kse = " \
@@ -50,14 +49,11 @@ SRC_URI_append_vuuno4kse = " \
 	file://lcd_icons_vuuno4kse \
 	file://vu_hd_1080p_default.patch \
 	file://enigma2_vuplus_uianimation_speed.patch \
-	file://enigma2_vuplus_check_recording.patch \
 "
 
 SRC_URI_append_vuzero4k = " \
 	file://vu_hd_1080p_default.patch \
 	file://enigma2_vuplus_uianimation_speed.patch \
-	file://enigma2_vuplus_check_recording.patch \
-	file://enigma2_vuplus_zero4k_hdd_recording.patch \
 	file://enigma2_vuplus_dvbs2x.patch \
 	file://enigma2_vuplus_mis_pls.patch \
 	file://enigma2_vuplus_zero4k_blindscan.patch \
