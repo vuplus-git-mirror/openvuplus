@@ -1,1 +1,1 @@
-* -fstype=auto,rw,sync :/dev/&
+* -fstype=auto,rw :/dev/&

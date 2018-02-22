@@ -1,4 +1,4 @@
-PR .= "-vuplus1"
+PR .= "-vuplus2"
 
 SRC_URI += " \
 	file://volatiles.99_autofs \
