@@ -1,8 +1,12 @@
 FILESEXTRAPATHS_prepend := "${THISDIR}/files:"
 
-PR .= "-bsp2"
+PR .= "-bsp3"
 
 require linux-libc-headers.inc
+
+SRC_URI += " \
+	file://linux_3_1x_dvbs2x.patch \
+"
 
 SRC_URI_append_vuultimo4k = " \
 	file://linux_3.19_dmx_source_dvr.patch \

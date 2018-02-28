@@ -54,8 +54,6 @@ SRC_URI_append_vuuno4kse = " \
 SRC_URI_append_vuzero4k = " \
 	file://vu_hd_1080p_default.patch \
 	file://enigma2_vuplus_uianimation_speed.patch \
-	file://enigma2_vuplus_dvbs2x.patch \
-	file://enigma2_vuplus_mis_pls.patch \
 	file://enigma2_vuplus_zero4k_blindscan.patch \
 "
 
