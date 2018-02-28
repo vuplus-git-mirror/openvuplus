@@ -6,7 +6,7 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=d7810fab7487fb0aad327b76f1be7cd7"
 PE = "1"
 KV = "3.14.28"
 
-INC_PR = "r5"
+INC_PR = "r6"
 SRCREV = ""
 
 MODULE = "linux-3.14.28"
