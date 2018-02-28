@@ -284,15 +284,6 @@ diff --git a/skin.py b/skin.py
 index 933f524..151af61 100755
 --- a/skin.py
 +++ b/skin.py
-@@ -55,7 +55,7 @@ def loadSkin(name, scope = SCOPE_SKIN):
- 
- # example: loadSkin("nemesis_greenline/skin.xml")
- config.skin = ConfigSubsection()
--config.skin.primary_skin = ConfigText(default = "skin.xml")
-+config.skin.primary_skin = ConfigText(default = "Vu_HD/skin.xml")
- 
- profile("LoadSkin")
- try:
 @@ -235,14 +235,27 @@ class AttributeParser:
  		self.guiObject.setZPosition(int(value))
  	def itemHeight(self, value):

@@ -28,33 +28,24 @@ SRC_URI_append_vuzero = " \
 SRC_URI_append_vusolo4k = " \
 	file://skin_user_vusolo4k.xml \
 	file://lcd_icons_vusolo4k \
-	file://vu_hd_1080p_default.patch \
 "
 
 SRC_URI_append_vuultimo4k = " \
 	file://skin_user_vuultimo4k.xml \
 	file://lcd_icons_vuultimo4k \
-	file://vu_hd_1080p_default.patch \
 	file://enigma2_network_sys0.patch \
 "
 
 SRC_URI_append_vuuno4k = " \
-	file://vu_hd_1080p_default.patch \
-	file://enigma2_vuplus_uianimation_speed.patch \
 	file://enigma2_vuplus_remove_pvr_action.patch \
 "
 
 SRC_URI_append_vuuno4kse = " \
 	file://skin_user_vuuno4kse.xml \
 	file://lcd_icons_vuuno4kse \
-	file://vu_hd_1080p_default.patch \
-	file://enigma2_vuplus_uianimation_speed.patch \
 "
 
 SRC_URI_append_vuzero4k = " \
-	file://vu_hd_1080p_default.patch \
-	file://enigma2_vuplus_uianimation_speed.patch \
-	file://enigma2_vuplus_zero4k_blindscan.patch \
 "
 
 do_install_append_vuultimo() {
