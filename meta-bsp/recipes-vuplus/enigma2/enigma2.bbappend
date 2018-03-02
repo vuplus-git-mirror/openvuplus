@@ -1,6 +1,6 @@
 FILESEXTRAPATHS_prepend := "${THISDIR}/${PN}:"
 
-PR .= "-bsp26"
+PR .= "-bsp27"
 
 SRC_URI_append_vusolo = " \
 	file://enigma2_vuplus_misc.patch \
@@ -18,11 +18,9 @@ SRC_URI_append_vuduo2 = " \
 "
 
 SRC_URI_append_vusolose = " \
-	file://enigma2_vuplus_remove_pvr_action.patch \
 "
 
 SRC_URI_append_vuzero = " \
-	file://enigma2_vuplus_remove_pvr_action.patch \
 "
 
 SRC_URI_append_vusolo4k = " \
@@ -37,7 +35,6 @@ SRC_URI_append_vuultimo4k = " \
 "
 
 SRC_URI_append_vuuno4k = " \
-	file://enigma2_vuplus_remove_pvr_action.patch \
 "
 
 SRC_URI_append_vuuno4kse = " \
