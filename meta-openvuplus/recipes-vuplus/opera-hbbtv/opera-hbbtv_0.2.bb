@@ -7,7 +7,7 @@ DEPENDS = "mpfr gmp"
 DEPENDS += "${@base_contains("GST_VERSION", "1.0", "gstreamer1.0", "gstreamer", d)}"
 RDEPENDS_${PN} = "sysfsutils"
 
-SRC_DATE = "20171018_0"
+SRC_DATE = "20180316_1"
 
 PR = "r2_${SRC_DATE}"
 SRC_URI = ""
@@ -60,11 +60,10 @@ do_install() {
 }
 
 do_install_append() {
-	GST_REQUIRED_VERSION=$(pkg-config --list-all | grep gstreamer-[0-9].* | awk -F "-| " '{print $2}')
-	GST_VERSION=$(pkg-config --modversion "gstreamer-$GST_REQUIRED_VERSION >= $GST_REQUIRED_VERSION")
-	mv ${D}/usr/local/hbb-browser/root/jsplugins/ooif-gst-$GST_VERSION.so ${D}/usr/local/hbb-browser/root/jsplugins/ooif.so
+	GST_PREFERED_VERSION="${@bb.utils.contains("GST_VERSION", "1.0", "1.4.5", "0.10.36.1", d)}"
+	mv ${D}/usr/local/hbb-browser/root/jsplugins/ooif-gst-$GST_PREFERED_VERSION.so ${D}/usr/local/hbb-browser/root/jsplugins/ooif.so
 	rm -f ${D}/usr/local/hbb-browser/root/jsplugins/ooif-gst*.so
-	mv ${D}/usr/local/hbb-browser/root/video/videobackend-gst-$GST_VERSION.so ${D}/usr/local/hbb-browser/root/video/videobackend.so
+	mv ${D}/usr/local/hbb-browser/root/video/videobackend-gst-$GST_PREFERED_VERSION.so ${D}/usr/local/hbb-browser/root/video/videobackend.so
 	rm -f ${D}/usr/local/hbb-browser/root/video/videobackend-gst*.so
 }
 
@@ -78,6 +77,6 @@ PACKAGES = "${PN}"
 
 FILES_${PN} = "/"
 
-SRC_URI[md5sum] = "b7c80c0004cce528be1221ccabb93010"
-SRC_URI[sha256sum] = "15e00cf8cd8d82255426acdd03b3d677342c088e946e18e491119b4c5175e6f5"
+SRC_URI[md5sum] = "6ff9f19427193b58f6e5b42d73e80815"
+SRC_URI[sha256sum] = "ac3c137afd511c7d9db0c62054712d64f1d910a4138a65f33e6d46ad4aaa55be"
 
