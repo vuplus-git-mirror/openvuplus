@@ -13,17 +13,16 @@ MODULE = "linux-3.14.28"
 
 KERNEL_CONFIG = "${MACHINE}_defconfig"
 
-SRC_URI += "http://archive.vuplus.com/download/kernel/stblinux-3.14-1.8.tar.bz2 \
+KSRC_VER = "3.14-1.8"
+SRC_URI += "http://archive.vuplus.com/download/kernel/stblinux-${KSRC_VER}.tar.bz2 \
 	file://${KERNEL_CONFIG} \
 	file://bcm_genet_disable_warn.patch \
 	file://linux_dvb-core.patch \
-	file://linux_rpmb_not_alloc.patch \
 	file://rt2800usb_fix_warn_tx_status_timeout_to_dbg.patch \
 	file://usb_core_hub_msleep.patch \
 	file://linux_3_1x_dvbs2x.patch \
+	${@base_contains("VUPLUS_FEATURES", "dvbproxy", "file://linux_dvb_adapter.patch", "", d)} \
 	"
-
-SRC_URI += "${@base_contains("VUPLUS_FEATURES", "dvbproxy", "file://linux_dvb_adapter.patch;patch=1;pnum=1", "", d)}"
 
 inherit kernel
 
