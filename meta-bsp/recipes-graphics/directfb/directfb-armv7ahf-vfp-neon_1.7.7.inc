@@ -2,7 +2,7 @@ require directfb-${MACHINE}.inc
 
 GFX_FILE = "directfb_1.7-7_gfxdriver_${MACHINE}_${GFXPR}.tar.gz"
 
-PR .= "-vuplus2_${GFXPR}"
+PR .= "-vuplus3_${GFXPR}"
 
 GFX_URI ?= "http://archive.vuplus.com/download/build_support/vuplus/${GFX_FILE};name=gfxdriver "
 
