@@ -1,45 +1,152 @@
 diff --git a/lib/python/Screens/NetworkSetup.py b/lib/python/Screens/NetworkSetup.py
-index 32b9f54..b31ba3a 100755
+index 2ea9b50..d24170d 100755
 --- a/lib/python/Screens/NetworkSetup.py
 +++ b/lib/python/Screens/NetworkSetup.py
-@@ -60,7 +60,11 @@ class NetworkAdapterSelection(Screen,HelpableScreen):
- 			"yellow": (self.setDefaultInterface, [_("Set interface as default Interface"),_("* Only available if more than one interface is active.")] ),
- 			})
+@@ -23,6 +23,21 @@ from enigma import eTimer, ePoint, eSize, RT_HALIGN_LEFT, eListboxPythonMultiCon
+ from os import path as os_path, system as os_system, unlink
+ from re import compile as re_compile, search as re_search
  
--		self.adapters = [(iNetwork.getFriendlyAdapterName(x),x) for x in iNetwork.getAdapterList()]
-+		self.adapters = []
-+		self.adapterList = [(iNetwork.getFriendlyAdapterName(x),x) for x in iNetwork.getAdapterList()]
-+		for x in self.adapterList:
-+			if x[1].startswith('eth'):
-+				self.adapters.append(x)
++def stopWlanConsole():
++	try:
++		from Plugins.SystemPlugins.WirelessLanSetup.Wlan import iStatus
++	except ImportError:
++		pass
++	else:
++		iStatus.stopWlanConsole()
++
++def getDataForWlanIface(iface, callback):
++	try:
++		from Plugins.SystemPlugins.WirelessLanSetup.Wlan import iStatus
++		iStatus.getDataForInterface(iface, callback)
++	except:
++		return False
++	return True
  
- 		if not self.adapters:
- 			self.adapters = [(iNetwork.getFriendlyAdapterName(x),x) for x in iNetwork.getConfiguredAdapters()]
-@@ -98,7 +102,12 @@ class NetworkAdapterSelection(Screen,HelpableScreen):
+ class NetworkAdapterSelection(Screen,HelpableScreen):
+ 	def __init__(self, session):
+@@ -413,7 +428,7 @@ class AdapterSetup(Screen, ConfigListScreen, HelpableScreen):
+ 		self.default = None
+ 
+ 		if iNetwork.isWirelessInterface(self.iface):
+-			from Plugins.SystemPlugins.WirelessLan.Wlan import wpaSupplicant
++			from Plugins.SystemPlugins.WirelessLanSetup.Wlan import wpaSupplicant
+ 			self.ws = wpaSupplicant()
+ 			self.encryptionlist = []
+ 			self.encryptionlist.append(("Unencrypted", _("Unencrypted")))
+@@ -766,7 +781,7 @@ class AdapterSetupConfiguration(Screen, HelpableScreen):
+ 		if self["menulist"].getCurrent()[1] == 'edit':
+ 			if iNetwork.isWirelessInterface(self.iface):
+ 				try:
+-					from Plugins.SystemPlugins.WirelessLan.plugin import WlanScan
++					from Plugins.SystemPlugins.WirelessLanSetup.plugin import WlanScan
+ 				except ImportError:
+ 					self.session.open(MessageBox, self.missingwlanplugintxt, type = MessageBox.TYPE_INFO,timeout = 10 )
+ 				else:
+@@ -782,7 +797,7 @@ class AdapterSetupConfiguration(Screen, HelpableScreen):
+ 			self.session.open(NameserverSetup)
+ 		if self["menulist"].getCurrent()[1] == 'scanwlan':
+ 			try:
+-				from Plugins.SystemPlugins.WirelessLan.plugin import WlanScan
++				from Plugins.SystemPlugins.WirelessLanSetup.plugin import WlanScan
+ 			except ImportError:
+ 				self.session.open(MessageBox, self.missingwlanplugintxt, type = MessageBox.TYPE_INFO,timeout = 10 )
  			else:
- 				interfacepng = LoadPixmap(resolveFilename(SCOPE_CURRENT_SKIN, "skin_default/icons/network_wireless.png"))
+@@ -792,7 +807,7 @@ class AdapterSetupConfiguration(Screen, HelpableScreen):
+ 					self.showErrorMessage()	# Display Wlan not available Message
+ 		if self["menulist"].getCurrent()[1] == 'wlanstatus':
+ 			try:
+-				from Plugins.SystemPlugins.WirelessLan.plugin import WlanStatus
++				from Plugins.SystemPlugins.WirelessLanSetup.plugin import WlanStatus
+ 			except ImportError:
+ 				self.session.open(MessageBox, self.missingwlanplugintxt, type = MessageBox.TYPE_INFO,timeout = 10 )
+ 			else:
+@@ -856,13 +871,9 @@ class AdapterSetupConfiguration(Screen, HelpableScreen):
+ 		self["Statustext"].setText(_("Link:"))
+ 		
+ 		if iNetwork.isWirelessInterface(self.iface):
+-			try:
+-				from Plugins.SystemPlugins.WirelessLan.Wlan import iStatus
+-			except:
++			if not getDataForWlanIface(self.iface, self.getInfoCB):
+ 				self["statuspic"].setPixmapNum(1)
+ 				self["statuspic"].show()
+-			else:
+-				iStatus.getDataForInterface(self.iface,self.getInfoCB)
+ 		else:
+ 			iNetwork.getLinkState(self.iface,self.dataAvail)
  
--		num_configured_if = len(iNetwork.getConfiguredAdapters())
-+#		num_configured_if = len(iNetwork.getConfiguredAdapters())
-+		num_configured_if=0
-+		for x in iNetwork.getConfiguredAdapters():
-+			if x.startswith('eth'):
-+				num_configured_if+=1
-+
- 		if num_configured_if >= 2:
- 			if default is True:
- 				defaultpng = LoadPixmap(cached=True, path=resolveFilename(SCOPE_CURRENT_SKIN, "skin_default/buttons/button_blue.png"))
-@@ -116,7 +125,12 @@ class NetworkAdapterSelection(Screen,HelpableScreen):
- 	def updateList(self):
- 		self.list = []
- 		default_gw = None
--		num_configured_if = len(iNetwork.getConfiguredAdapters())
-+#		num_configured_if = len(iNetwork.getConfiguredAdapters())
-+		num_configured_if=0
-+		for x in iNetwork.getConfiguredAdapters():
-+			if x.startswith('eth'):
-+				num_configured_if+=1
-+
- 		if num_configured_if >= 2:
- 			self["key_yellow"].setText(_("Default"))
- 			self["introduction"].setText(self.defaulttext)
+@@ -907,7 +918,7 @@ class AdapterSetupConfiguration(Screen, HelpableScreen):
+ 		if ret is not None and len(ret):
+ 			if ret[0] == 'ok' and (iNetwork.isWirelessInterface(self.iface) and iNetwork.getAdapterAttribute(self.iface, "up") is True):
+ 				try:
+-					from Plugins.SystemPlugins.WirelessLan.plugin import WlanStatus
++					from Plugins.SystemPlugins.WirelessLanSetup.plugin import WlanStatus
+ 				except ImportError:
+ 					self.session.open(MessageBox, self.missingwlanplugintxt, type = MessageBox.TYPE_INFO,timeout = 10 )
+ 				else:	
+@@ -922,16 +933,14 @@ class AdapterSetupConfiguration(Screen, HelpableScreen):
+ 
+ 	def WlanStatusClosed(self, *ret):
+ 		if ret is not None and len(ret):
+-			from Plugins.SystemPlugins.WirelessLan.Wlan import iStatus
+-			iStatus.stopWlanConsole()
++			stopWlanConsole()
+ 			self.updateStatusbar()
+ 
+ 	def WlanScanClosed(self,*ret):
+ 		if ret[0] is not None:
+ 			self.session.openWithCallback(self.AdapterSetupClosed, AdapterSetup, self.iface,ret[0])
+ 		else:
+-			from Plugins.SystemPlugins.WirelessLan.Wlan import iStatus
+-			iStatus.stopWlanConsole()
++			stopWlanConsole()
+ 			self.updateStatusbar()
+ 			
+ 	def restartLan(self, ret = False):
+@@ -975,12 +984,7 @@ class AdapterSetupConfiguration(Screen, HelpableScreen):
+ 		iNetwork.stopDeactivateInterfaceConsole()
+ 		iNetwork.stopActivateInterfaceConsole()
+ 		iNetwork.stopPingConsole()
+-		try:
+-			from Plugins.SystemPlugins.WirelessLan.Wlan import iStatus
+-		except ImportError:
+-			pass
+-		else:
+-			iStatus.stopWlanConsole()
++		stopWlanConsole()
+ 
+ 	def getInfoCB(self,data,status):
+ 		self.LinkState = None
+@@ -1343,15 +1347,11 @@ class NetworkAdapterTest(Screen):
+ 
+ 	def getLinkState(self,iface):
+ 		if iface in iNetwork.wlan_interfaces:
+-			try:
+-				from Plugins.SystemPlugins.WirelessLan.Wlan import iStatus
+-			except:
+-					self["Network"].setForegroundColorNum(1)
+-					self["Network"].setText(_("disconnected"))
+-					self["NetworkInfo_Check"].setPixmapNum(1)
+-					self["NetworkInfo_Check"].show()
+-			else:
+-				iStatus.getDataForInterface(self.iface,self.getInfoCB)
++			if not getDataForWlanIface(self.iface, self.getInfoCB):
++				self["Network"].setForegroundColorNum(1)
++				self["Network"].setText(_("disconnected"))
++				self["NetworkInfo_Check"].setPixmapNum(1)
++				self["NetworkInfo_Check"].show()
+ 		else:
+ 			iNetwork.getLinkState(iface,self.LinkStatedataAvail)
+ 
+@@ -1425,10 +1425,5 @@ class NetworkAdapterTest(Screen):
+ 	def cleanup(self):
+ 		iNetwork.stopLinkStateConsole()
+ 		iNetwork.stopDNSConsole()
+-		try:
+-			from Plugins.SystemPlugins.WirelessLan.Wlan import iStatus
+-		except ImportError:
+-			pass
+-		else:
+-			iStatus.stopWlanConsole()
++		stopWlanConsole()
+ 

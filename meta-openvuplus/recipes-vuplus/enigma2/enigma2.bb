@@ -233,7 +233,7 @@ DEPENDS += "${@base_contains("VUPLUS_FEATURES", "uianimation", "libgles libvugle
 RDEPENDS_${PN}_append_vuplus += "${@base_contains("VUPLUS_FEATURES", "uianimation", "libvugles2" , "", d)}"
 
 PN = "enigma2"
-PR = "r182"
+PR = "r183"
 
 inherit gitpkgv pythonnative
 
@@ -255,7 +255,6 @@ SRC_URI = "git://code.vuplus.com/git/dvbapp.git;protocol=http;branch=${BRANCH};r
 	file://enigma2_vuplus_proc_oom_score_adj.patch \
         file://enigma2_vuplus_fix_standby_name.patch \
 	file://enigma2_vuplus_disable_subtitle_sync_mode_bug.patch \
-	file://enigma2_vuplus_networksetup_update_ifaces.patch \
 	file://spinner \
 	file://number_key \
 "
