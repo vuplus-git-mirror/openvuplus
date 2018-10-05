@@ -7,7 +7,7 @@ LICENSE = "CLOSED"
 require conf/license/license-close.inc
 
 PV = "4.4"
-PV_arm = "5.0"
+PV_arm = "5.1"
 
 PR = "r10"
 PACKAGE_ARCH = "${MACHINE_ARCH}"
@@ -41,6 +41,7 @@ PLUGABLE_ARM_BLINDSCAN = " \
 	tt2l08 \
 	tt2l08_t2_scan \
 	bcm3148 \
+	bcm3466 \
 "
 
 do_install() {
@@ -120,8 +121,8 @@ do_install_vuzero4k() {
 SRC_URI[md5sum] = "b6d485516762453dcb829d914b4e06b3"
 SRC_URI[sha256sum] = "cb7045db4aee0d1ef9392231d2bfc7f843e9e9ec82ceb17d86dd7c1fe56bef4b"
 
-SRC_URI[arm.md5sum] = "deb347c9910e2d6c7861b018d6e682c7"
-SRC_URI[arm.sha256sum] = "635e7b5b23c865292b026742f0014ea3fd280d3dfe0b95647b8ae7f72aafe6a4"
+SRC_URI[arm.md5sum] = "1744184485bdc6889f6556504e574c6a"
+SRC_URI[arm.sha256sum] = "518775bf3ff43ade300741232ce4d303d4aeaea09f1a7d7256e40a4fe95156ca"
 
 INSANE_SKIP_${PN} = "already-stripped"
 
