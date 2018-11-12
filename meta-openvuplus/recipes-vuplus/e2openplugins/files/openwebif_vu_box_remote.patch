@@ -21,7 +21,7 @@ index 9b8f1e5..4bbf6fb 100644
  		remote = "vu_duo2"
  	elif procmodel == "ultimo":
  		remote = "vu_ultimo"
-+	elif procmodel in ("uno4kse", "zero4k"):
++	elif procmodel in ("uno4kse", "zero4k", "duo4k"):
 +		remote = "vu_brown"
  	elif procmodel == "e3hd":
  		remote = "e3hd"

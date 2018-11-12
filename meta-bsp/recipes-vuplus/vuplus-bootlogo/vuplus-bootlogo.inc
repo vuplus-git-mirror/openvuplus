@@ -47,3 +47,4 @@ do_install_append() {
         fi
 }
 
+do_populate_sysroot[noexec] = "1"

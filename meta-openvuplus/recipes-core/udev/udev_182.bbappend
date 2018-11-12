@@ -1,4 +1,4 @@
-PR .= "-vuplus7"
+PR .= "-vuplus9"
 
 SRC_URI += " \
 	file://99_vuplus.rules \

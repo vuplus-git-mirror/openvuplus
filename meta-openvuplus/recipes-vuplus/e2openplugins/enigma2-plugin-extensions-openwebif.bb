@@ -12,7 +12,7 @@ SRCREV_pn-${PN}="d84307958746e6a597b43defe5bd1cb78fd745c8"
 inherit gitpkgv
 PV = "1+git${SRCPV}"
 PKGV = "1+git${GITPKGV}"
-PR = "r6"
+PR = "r9"
 
 require openplugins-distutils.inc
 
@@ -26,6 +26,7 @@ SRC_URI = "git://github.com/E2OpenPlugins/e2openplugin-${MODULE}.git;protocol=gi
 	file://box_ultimo4k.png \
 	file://box_uno4kse.png \
 	file://box_zero4k.png \
+	file://box_duo4k.png \
 "
 
 # Just a quick hack to "compile" it
@@ -44,6 +45,7 @@ do_install_append() {
 	install -m 0755 ${WORKDIR}/box_ultimo4k.png ${D}${PLUGINPATH}/public/images/boxes/ultimo4k.png
 	install -m 0755 ${WORKDIR}/box_uno4kse.png ${D}${PLUGINPATH}/public/images/boxes/uno4kse.png
 	install -m 0755 ${WORKDIR}/box_zero4k.png ${D}${PLUGINPATH}/public/images/boxes/zero4k.png
+	install -m 0755 ${WORKDIR}/box_duo4k.png ${D}${PLUGINPATH}/public/images/boxes/duo4k.png
 }
 
 python do_package_prepend () {
@@ -61,6 +63,7 @@ python do_package_prepend () {
   ('vuultimo4k', 'ultimo4k.png', 'vu_normal.png'),
   ('vuuno4kse', 'uno4kse.png', 'vu_brown.png'),
   ('vuzero4k', 'zero4k.png', 'vu_brown.png'),
+  ('vuduo4k', 'duo4k.png', 'vu_brown.png'),
   ]
   import os
   top = '${D}${PLUGINPATH}/public/images/'
