@@ -3,7 +3,7 @@ require vuplus-platform-util.inc
 COMPATIBLE_MACHINE = "^(vuduo4k)$"
 
 PV="18.1"
-SRCDATE = "20181115"
+SRCDATE = "20181116"
 SRCDATE_PR = "r0"
 
 SRC_URI += "\
@@ -14,5 +14,5 @@ do_install_append() {
 	install -m 0755 ${WORKDIR}/bp3flash.py ${D}${bindir}
 }
 
-SRC_URI[md5sum] = "976e641600105ac4986b36b6d8e04e4b"
-SRC_URI[sha256sum] = "cd8cd239a8638d40edd562982bd239c5a9dc1514dc2ae8bc3b639d45656388f7"
+SRC_URI[md5sum] = "8e6f68601aca1f73ae083b01891fa90c"
+SRC_URI[sha256sum] = "2a1619691bddce610b715627057ba4614d2c5dca9fe919939e8ec03922858c2e"
