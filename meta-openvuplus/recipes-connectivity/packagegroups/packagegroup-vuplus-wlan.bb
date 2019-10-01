@@ -2,7 +2,7 @@ DESCRIPTION = "Vuplus: W-LAN package group for the Vuplus Distribution"
 SECTION = "vuplus/base"
 LICENSE = "MIT"
 LIC_FILES_CHKSUM = "file://${COREBASE}/meta/COPYING.MIT;md5=3da9cfbcb788c80a0384361b4de20420"
-PR = "r22"
+PR = "r23"
 
 PACKAGE_ARCH = "${MACHINE_ARCH}"
 
@@ -22,6 +22,7 @@ WIFI_FIRMWARES = "\
 	firmware-rt2561 \
 	firmware-rtl8721u \
 	firmware-rt3070 \
+	firmware-rtl8192eu \
 "
 
 KERNEL_WIFI_MODULES = " \
@@ -46,6 +47,9 @@ KERNEL_WIFI_MODULES += "${@base_version_less_or_equal('VUPLUS_KERNEL_VERSION', '
 LEGACY_MODULES = " \
 	r8192cu \
 	rt3070 \
+	rtl8192eu \
+	rtl8812au \
+	rtl8814au \
 "
 
 RDEPENDS_${PN}_append = "\
