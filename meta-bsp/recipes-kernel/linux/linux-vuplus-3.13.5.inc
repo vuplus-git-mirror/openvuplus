@@ -6,7 +6,7 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=d7810fab7487fb0aad327b76f1be7cd7"
 PE = "1"
 KV = "3.13.5"
 
-INC_PR = "r7"
+INC_PR = "r8"
 SRCREV = ""
 
 MODULE = "linux-3.13.5"
@@ -60,4 +60,4 @@ FILESEXTRAPATHS_prepend := "${THISDIR}/linux-vuplus-${KV}:"
 SRC_URI[md5sum] = "19e9956653437b99b4fa6ec3e16a3e99"
 SRC_URI[sha256sum] = "ef7fb307582ff243aacff8a13025fe028634aaf650ada309991ae03622962f61"
 
-
+RM_WORK_EXCLUDE += "linux-vuplus-${MACHINE}"

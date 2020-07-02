@@ -8,7 +8,7 @@ RDEPENDS_${PN} = '${ESSENTIAL_RDEPENDS}'
 RRECOMMENDS_${PN} = '${ESSENTIAL_RRECOMMENDS}'
 RRECOMMENDS_${PN} += '${KERNEL_DVB_MODULES}'
 
-PR = "r8"
+PR = "r9"
 
 PACKAGE_ARCH = "${MACHINE_ARCH}"
 
@@ -232,9 +232,14 @@ KERNEL_MEDIA_CUSTOMIZE_DVB_FRONTENDS = " \
   kernel-module-af9033 \
 "
 
+EXTRA_DRIVERS = " \
+  ${@base_conditional("TARGET_ARCH", "mipsel", "hmp-usb-dvb-t2-c", "hmp-usb-dvb-t2-c-arm", d)} \
+"
+
 KERNEL_DVB_MODULES = " \
   ${KERNEL_MEDIA_USB_ADAPTERS} \
   ${KERNEL_MEDIA_CUSTOMIZE_TV_TUNER} \
   ${KERNEL_MEDIA_CUSTOMIZE_DVB_FRONTENDS} \
+  ${EXTRA_DRIVERS} \
 "
 

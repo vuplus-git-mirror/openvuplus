@@ -1782,7 +1782,7 @@ CONFIG_VIDEO_CX25840=m
 #
 # Sensors used on soc_camera driver
 #
-CONFIG_MEDIA_TUNER=y
+CONFIG_MEDIA_TUNER=n
 
 #
 # Customize TV tuners
