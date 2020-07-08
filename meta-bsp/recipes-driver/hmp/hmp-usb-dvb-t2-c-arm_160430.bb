@@ -26,7 +26,7 @@ SRCDATE_VER = "${SRCDATE}"
 SRCDATE_BIN = "150322"
 
 PV = "V${SRCDATE_VER}"
-PR = "r0"
+PR = "r1"
 
 PACKAGES = "${PN} \
             ${PN}-dev \
@@ -93,4 +93,4 @@ pkg_postinst_${PN} () {
 
 FILESEXTRAPATHS_prepend := "${THISDIR}/hmp-usb-dvb-t2-c-v04arm:"
 
-COMPATIBLE_MACHINE = "^(vuzero4k)$"
+COMPATIBLE_MACHINE = "^(vuzero4k|vuuno4kse|vuduo4k)$"
