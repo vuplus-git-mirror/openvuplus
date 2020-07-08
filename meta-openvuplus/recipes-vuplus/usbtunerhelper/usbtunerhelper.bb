@@ -4,7 +4,7 @@ LICENSE = "GPLv2"
 LIC_FILES_CHKSUM = "file://${COREBASE}/meta/files/common-licenses/GPL-2.0;md5=801f80980d171dd6425610833a22dbe6"
 
 PV = "1.0+git${SRCPV}"
-PR = "r8"
+PR = "r9"
 SRC_REV = ""
 
 SRC_URI = " \
@@ -15,6 +15,7 @@ SRC_URI = " \
 	file://get_avail_vtuner.patch \
 	file://setfrontend_ofdm_fecauto.patch \
 	file://pump_proc_checksize.patch \
+	file://fix_delayed_loading.patch \
 	file://${PN}.sh \
 	"
 

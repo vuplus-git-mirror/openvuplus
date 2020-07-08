@@ -1,0 +1,34 @@
+diff -Naur git.orig/usbtunerhelper.c git/usbtunerhelper.c
+--- git.orig/usbtunerhelper.c	2015-11-04 20:03:46.000000000 +0100
++++ git/usbtunerhelper.c	2015-11-04 20:04:16.200476304 +0100
+@@ -665,6 +665,7 @@
+ 	int debug = 0;
+ 	int scan_inverval = 1;
+ 	int scan_count = 60;
++	char filename[] = "/tmp/.vtuner_available";
+ 
+ 	int option;
+ 	while ((option = getopt(argc, argv, "dh")) >= 0)
+@@ -680,6 +681,12 @@
+ 		}
+ 	}
+ 
++	if ( (scan_adapters() > 0) && (!debug) ){
++		FILE *fp;
++		fp=fopen(filename, "w+");
++		fclose(fp);
++	}
++
+ 	if (!debug) daemon_init();
+ 
+ 	signal(SIGTERM, sigint_handler);
+@@ -700,6 +707,9 @@
+ 
+ 	available_vtuner = get_avail_vtuner();
+ 
++	int ret;
++	ret = remove(filename);
++	
+ 	for (i = 0; i < adaptercount; i++)
+ 	{
+ 		init_adapter(i);
