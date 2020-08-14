@@ -11,10 +11,11 @@ RPROVIDES_${PN} += "enigma2-plugin-systemplugins-bluetoothsetup"
 
 RREPLACES_${PN} = "enigma2-plugin-systemplugins-bluetoothsetup"
 
-PR="${SRCDATE}.${SRCDATE_PR}"
+PR="${@base_version_less_or_equal('PYTHON_BASEVERSION', '2.7', "${SRCDATE}.${SRCDATE_PR}", "${SRCDATE_PY3}-py3.${SRCDATE_PY3_PR}", d)}"
+CHECKSUM_NAME = "${@base_version_less_or_equal('PYTHON_BASEVERSION', '2.7', '', 'name=py3', d)}"
 
 SRC_URI = " \
-    http://archive.vuplus.com/download/build_support/vuplus/enigma2-plugin-bluetoothsetup-${MACHINE}-${PR}.tar.gz \
+    http://archive.vuplus.com/download/build_support/vuplus/enigma2-plugin-bluetoothsetup-${MACHINE}-${PR}.tar.gz;${CHECKSUM_NAME} \
 "
 
 S = "${WORKDIR}/plugin"
