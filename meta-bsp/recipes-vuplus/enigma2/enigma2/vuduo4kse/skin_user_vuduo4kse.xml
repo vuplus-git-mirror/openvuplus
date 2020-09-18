@@ -1,0 +1,253 @@
+<skin>
+	<colors>
+		<color name="LCDBackground" value="#191f26" />
+	</colors>
+	<fonts>
+		<font filename="MyriadPro-Regular.otf" name="Regular" scale="100" />
+		<font filename="MyriadPro-Semibold.otf" name="Semibold" scale="100" />
+		<font filename="MyriadPro-SemiboldIt.otf" name="Semiboldit" scale="100" />
+	</fonts>
+	<windowstyle type="skinned" id="1">
+		<color name="Background" color="LCDBackground" />
+		<color name="LabelForeground" color="white" />
+		<color name="ListboxBackground" color="LCDBackground" />
+		<color name="ListboxForeground" color="white" />
+		<color name="ListboxSelectedBackground" color="LCDBackground" />
+		<color name="ListboxSelectedForeground" color="white" />
+		<color name="ListboxMarkedBackground" color="LCDBackground" />
+		<color name="ListboxMarkedForeground" color="white" />
+		<color name="ListboxMarkedAndSelectedBackground" color="LCDBackground" />
+		<color name="ListboxMarkedAndSelectedForeground" color="white" />
+		<color name="WindowTitleBackground" color="LCDBackground" />
+		<color name="WindowTitleForeground" color="white" />
+	</windowstyle>
+	<screen name="InfoBarSummary" position="0,0" size="480,320" id="1">
+		<widget source="session.RecordState" render="Pixmap" pixmap="lcd_icons/REC.png" position="20,15"  size="57,34" alphatest="blend">
+			<convert type="ConditionalShowHide" />
+		</widget>
+		<widget source="session.CurrentService" render="Pixmap" pixmap="lcd_icons/CRYPT.png" position="89,15"  size="47,34" alphatest="blend">
+			<convert type="ServiceInfo">IsCrypted</convert>
+			<convert type="ConditionalShowHide" />
+		</widget>
+		<widget source="session.CurrentService" render="Pixmap" pixmap="lcd_icons/TELETEXT.png" position="146,12" size="50,39" alphatest="blend">
+			<convert type="ServiceInfo">HasTelext</convert>
+			<convert type="ConditionalShowHide" />
+		</widget>
+		<widget source="session.CurrentService" render="Pixmap" pixmap="lcd_icons/16x9.png" position="207,12" size="51,39" alphatest="blend">
+			<convert type="ServiceInfo">IsWidescreen</convert>
+			<convert type="ConditionalShowHide" />
+		</widget>
+		<widget source="session.CurrentService" render="Pixmap" pixmap="lcd_icons/DOLBY.png" position="269,15" size="53,34" alphatest="blend">
+			<convert type="ServiceInfo">IsMultichannel</convert>
+			<convert type="ConditionalShowHide" />
+		</widget>
+		<ePixmap pixmap="lcd_icons/time.png" position="360,20"  size="28,28" alphatest="blend" />
+		<widget source="global.CurrentTime" render="Label" position="393,20" size="85,38" font="Regular;32" halign="left" backgroundColor="LCDBackground">
+			<convert type="ClockToText">Format:%H:%M</convert>
+		</widget>
+		<widget source="session.CurrentService" render="Label" position="0,90" size="480,55" font="Semibold;42" halign="center" valign="center" backgroundColor="LCDBackground">
+			<convert type="ServiceName">Name</convert>
+		</widget>
+		<widget source="session.Event_Now" render="Label" position="0,145" size="480,105" font="Regular;40" halign="center" valign="center" backgroundColor="LCDBackground">
+			<convert type="EventName">Name</convert>
+		</widget>
+		<widget source="session.Event_Now" render="Progress" position="60,250" size="360,40" borderWidth="2" backgroundColor="LCDBackground">
+			<convert type="EventTime">Progress</convert>
+		</widget>
+	 </screen>
+	 <screen name="ChannelSelection_summary" position="0,0" size="480,320" id="1">
+	 	<widget source="session.RecordState" render="Pixmap" pixmap="lcd_icons/REC.png" position="20,15"  size="57,34" alphatest="blend">
+			<convert type="ConditionalShowHide" />
+		</widget>
+		<widget source="session.CurrentService" render="Pixmap" pixmap="lcd_icons/CRYPT.png" position="89,15"  size="47,34" alphatest="blend">
+			<convert type="ServiceInfo">IsCrypted</convert>
+			<convert type="ConditionalShowHide" />
+		</widget>
+		<widget source="session.CurrentService" render="Pixmap" pixmap="lcd_icons/TELETEXT.png" position="146,12" size="50,39" alphatest="blend">
+			<convert type="ServiceInfo">HasTelext</convert>
+			<convert type="ConditionalShowHide" />
+		</widget>
+		<widget source="session.CurrentService" render="Pixmap" pixmap="lcd_icons/16x9.png" position="207,12" size="51,39" alphatest="blend">
+			<convert type="ServiceInfo">IsWidescreen</convert>
+			<convert type="ConditionalShowHide" />
+		</widget>
+		<widget source="session.CurrentService" render="Pixmap" pixmap="lcd_icons/DOLBY.png" position="269,15" size="53,34" alphatest="blend">
+			<convert type="ServiceInfo">IsMultichannel</convert>
+			<convert type="ConditionalShowHide" />
+		</widget>
+		<ePixmap pixmap="lcd_icons/time.png" position="360,20"  size="28,28" alphatest="blend" />
+		<widget source="global.CurrentTime" render="Label" position="393,20" size="85,38" font="Regular;32" halign="left" backgroundColor="LCDBackground">
+			<convert type="ClockToText">Format:%H:%M</convert>
+		</widget>
+		<widget source="parent.ServiceEvent" render="Label" position="0,90" size="480,55" font="Semibold;42" halign="center" valign="center" backgroundColor="LCDBackground">
+			<convert type="ServiceName">Name</convert>
+		</widget>
+		<widget source="parent.ServiceEvent" render="Label" position="0,145" size="480,105" font="Regular;40" halign="center" valign="center" backgroundColor="LCDBackground">
+			<convert type="EventName">Name</convert>
+		</widget>
+		<widget source="session.Event_Now" render="Progress" position="60,250" size="360,40" borderWidth="2" backgroundColor="LCDBackground">
+			<convert type="EventTime">Progress</convert>
+		</widget>
+	</screen>
+	<screen name="InfoBarMoviePlayerSummary" position="0,0" size="480,320" id="1">
+		<widget source="session.RecordState" render="Pixmap" pixmap="lcd_icons/REC.png" position="20,15"  size="57,34" alphatest="blend">
+			<convert type="ConditionalShowHide" />
+		</widget>
+		<widget source="session.CurrentService" render="Pixmap" pixmap="lcd_icons/CRYPT.png" position="89,15"  size="47,34" alphatest="blend">
+			<convert type="ServiceInfo">IsCrypted</convert>
+			<convert type="ConditionalShowHide" />
+		</widget>
+		<widget source="session.CurrentService" render="Pixmap" pixmap="lcd_icons/TELETEXT.png" position="146,12" size="50,39" alphatest="blend">
+			<convert type="ServiceInfo">HasTelext</convert>
+			<convert type="ConditionalShowHide" />
+		</widget>
+		<widget source="session.CurrentService" render="Pixmap" pixmap="lcd_icons/16x9.png" position="207,12" size="51,39" alphatest="blend">
+			<convert type="ServiceInfo">IsWidescreen</convert>
+			<convert type="ConditionalShowHide" />
+		</widget>
+		<widget source="session.CurrentService" render="Pixmap" pixmap="lcd_icons/DOLBY.png" position="269,15" size="53,34" alphatest="blend">
+			<convert type="ServiceInfo">IsMultichannel</convert>
+			<convert type="ConditionalShowHide" />
+		</widget>
+		<ePixmap pixmap="lcd_icons/time.png" position="360,20"  size="28,28" alphatest="blend" />
+		<widget source="global.CurrentTime" render="Label" position="393,20" size="85,38" font="Regular;32" halign="left" backgroundColor="LCDBackground">
+			<convert type="ClockToText">Format:%H:%M</convert>
+		</widget>
+		<widget source="session.CurrentService" render="Label" position="0,90" size="480,160" font="Semibold;40" halign="center" valign="center" backgroundColor="LCDBackground">
+			<convert type="ServiceName">Name</convert>
+		</widget>
+		<widget source="session.CurrentService" render="Progress" position="60,250" size="360,40" borderWidth="2" backgroundColor="LCDBackground">
+			<convert type="ServicePosition">Position</convert>
+		</widget>
+	</screen>
+	<screen name="ChoiceBox_summary" position="0,0" size="480,320" id="1">
+		<widget source="parent.summary_list" render="Label" position="30,10" size="420,300" font="Regular;32" backgroundColor="LCDBackground"/>
+	</screen>
+	<screen name="MessageBox_summary" position="0,0" size="480,320" id="1">
+		<widget source="parent.Text" render="Label" position="20,15" size="450,200" font="Regular;38" halign="center" valign="center" backgroundColor="LCDBackground"/>
+		<widget source="parent.selectedChoice" render="Label" position="20,215" size="450,40" font="Regular;38" halign="center" valign="center" backgroundColor="LCDBackground"/>
+	</screen>
+	<screen name="MenuSummary" position="0,0" size="480,320" id="1">
+		<widget source="session.RecordState" render="Pixmap" pixmap="lcd_icons/REC.png" position="20,15"  size="57,34" alphatest="blend">
+			<convert type="ConditionalShowHide" />
+		</widget>
+		<widget source="session.CurrentService" render="Pixmap" pixmap="lcd_icons/CRYPT.png" position="89,15"  size="47,34" alphatest="blend">
+			<convert type="ServiceInfo">IsCrypted</convert>
+			<convert type="ConditionalShowHide" />
+		</widget>
+		<widget source="session.CurrentService" render="Pixmap" pixmap="lcd_icons/TELETEXT.png" position="146,12" size="50,39" alphatest="blend">
+			<convert type="ServiceInfo">HasTelext</convert>
+			<convert type="ConditionalShowHide" />
+		</widget>
+		<widget source="session.CurrentService" render="Pixmap" pixmap="lcd_icons/16x9.png" position="207,12" size="51,39" alphatest="blend">
+			<convert type="ServiceInfo">IsWidescreen</convert>
+			<convert type="ConditionalShowHide" />
+		</widget>
+		<widget source="session.CurrentService" render="Pixmap" pixmap="lcd_icons/DOLBY.png" position="269,15" size="53,34" alphatest="blend">
+			<convert type="ServiceInfo">IsMultichannel</convert>
+			<convert type="ConditionalShowHide" />
+		</widget>
+		<ePixmap pixmap="lcd_icons/time.png" position="360,20"  size="28,28" alphatest="blend" />
+		<widget source="global.CurrentTime" render="Label" position="393,20" size="85,38" font="Regular;32" halign="left" backgroundColor="LCDBackground">
+			<convert type="ClockToText">Format:%H:%M</convert>
+		</widget>
+		<widget source="parent.title" render="Label" position="15,87" size="450,73" font="Semibold;48" halign="center" valign="center" backgroundColor="LCDBackground"/>
+		<widget source="parent.menu" render="Label" position="15,160" size="450,120" font="Semibold;52" halign="center" valign="center" backgroundColor="LCDBackground">
+			<convert type="StringListSelection" />
+		</widget>
+	</screen>
+	<screen name="ServiceScanSummary" position="0,0" size="480,320" id="1">
+		<widget name="Title" position="25,20" size="430,80" font="Regular;50" transparent="1" backgroundColor="LCDBackground" />
+		<widget name="Service" position="25,100" size="430,150" font="Regular;38" transparent="1" backgroundColor="LCDBackground" />
+		<widget name="scan_progress" position="60,250" size="360,40" zPosition="1" borderWidth="2" backgroundColor="LCDBackground" />
+	</screen>
+	<screen name="SetupSummary" position="0,0" size="480,320" id="1">
+		<widget source="session.RecordState" render="Pixmap" pixmap="lcd_icons/REC.png" position="20,15"  size="57,34" alphatest="blend">
+			<convert type="ConditionalShowHide" />
+		</widget>
+		<widget source="session.CurrentService" render="Pixmap" pixmap="lcd_icons/CRYPT.png" position="89,15"  size="47,34" alphatest="blend">
+			<convert type="ServiceInfo">IsCrypted</convert>
+			<convert type="ConditionalShowHide" />
+		</widget>
+		<widget source="session.CurrentService" render="Pixmap" pixmap="lcd_icons/TELETEXT.png" position="146,12" size="50,39" alphatest="blend">
+			<convert type="ServiceInfo">HasTelext</convert>
+			<convert type="ConditionalShowHide" />
+		</widget>
+		<widget source="session.CurrentService" render="Pixmap" pixmap="lcd_icons/16x9.png" position="207,12" size="51,39" alphatest="blend">
+			<convert type="ServiceInfo">IsWidescreen</convert>
+			<convert type="ConditionalShowHide" />
+		</widget>
+		<widget source="session.CurrentService" render="Pixmap" pixmap="lcd_icons/DOLBY.png" position="269,15" size="53,34" alphatest="blend">
+			<convert type="ServiceInfo">IsMultichannel</convert>
+			<convert type="ConditionalShowHide" />
+		</widget>
+		<ePixmap pixmap="lcd_icons/time.png" position="360,20"  size="28,28" alphatest="blend" />
+		<widget source="global.CurrentTime" render="Label" position="393,20" size="85,38" font="Regular;32" halign="left" backgroundColor="LCDBackground">
+			<convert type="ClockToText">Format:%H:%M</convert>
+		</widget>
+		<widget source="SetupTitle" render="Label" position="25,65" size="430,60" font="Semibold;52" halign="center" backgroundColor="LCDBackground" />
+		<widget source="SetupEntry" render="Label" position="25,125" size="430,120" font="Semibold;38" halign="center" backgroundColor="LCDBackground" />
+		<widget source="SetupValue" render="Label" position="25,245" size="430,40" font="Regular;42" halign="center" backgroundColor="LCDBackground" />
+	</screen>
+	<screen name="StandbySummary" position="0,0" size="480,320" id="1">
+		<widget source="session.RecordState" render="Pixmap" pixmap="lcd_icons/REC.png" position="20,15"  size="57,34" alphatest="blend">
+			<convert type="ConditionalShowHide" />
+		</widget>
+		<widget source="session.CurrentService" render="Pixmap" pixmap="lcd_icons/CRYPT.png" position="89,15"  size="47,34" alphatest="blend">
+			<convert type="ServiceInfo">IsCrypted</convert>
+			<convert type="ConditionalShowHide" />
+		</widget>
+		<widget source="session.CurrentService" render="Pixmap" pixmap="lcd_icons/TELETEXT.png" position="146,12" size="50,39" alphatest="blend">
+			<convert type="ServiceInfo">HasTelext</convert>
+			<convert type="ConditionalShowHide" />
+		</widget>
+		<widget source="session.CurrentService" render="Pixmap" pixmap="lcd_icons/16x9.png" position="207,12" size="51,39" alphatest="blend">
+			<convert type="ServiceInfo">IsWidescreen</convert>
+			<convert type="ConditionalShowHide" />
+		</widget>
+		<widget source="session.CurrentService" render="Pixmap" pixmap="lcd_icons/DOLBY.png" position="269,15" size="53,34" alphatest="blend">
+			<convert type="ServiceInfo">IsMultichannel</convert>
+			<convert type="ConditionalShowHide" />
+		</widget>
+		<widget source="global.CurrentTime" render="Label" position="40,70" size="400,180" font="Regular;130" halign="center" valign="center" backgroundColor="LCDBackground">
+			<convert type="ClockToText">Format:%H:%M</convert>
+		</widget>
+	</screen>
+	<screen name="SimpleSummary" position="0,0" size="480,320" id="1">
+		<widget source="session.RecordState" render="Pixmap" pixmap="lcd_icons/REC.png" position="20,15"  size="57,34" alphatest="blend">
+			<convert type="ConditionalShowHide" />
+		</widget>
+		<widget source="session.CurrentService" render="Pixmap" pixmap="lcd_icons/CRYPT.png" position="89,15"  size="47,34" alphatest="blend">
+			<convert type="ServiceInfo">IsCrypted</convert>
+			<convert type="ConditionalShowHide" />
+		</widget>
+		<widget source="session.CurrentService" render="Pixmap" pixmap="lcd_icons/TELETEXT.png" position="146,12" size="50,39" alphatest="blend">
+			<convert type="ServiceInfo">HasTelext</convert>
+			<convert type="ConditionalShowHide" />
+		</widget>
+		<widget source="session.CurrentService" render="Pixmap" pixmap="lcd_icons/16x9.png" position="207,12" size="51,39" alphatest="blend">
+			<convert type="ServiceInfo">IsWidescreen</convert>
+			<convert type="ConditionalShowHide" />
+		</widget>
+		<widget source="session.CurrentService" render="Pixmap" pixmap="lcd_icons/DOLBY.png" position="269,15" size="53,34" alphatest="blend">
+			<convert type="ServiceInfo">IsMultichannel</convert>
+			<convert type="ConditionalShowHide" />
+		</widget>
+		<ePixmap pixmap="lcd_icons/time.png" position="360,20"  size="28,28" alphatest="blend" />
+		<widget source="global.CurrentTime" render="Label" position="393,20" size="85,38" font="Regular;32" halign="left" backgroundColor="LCDBackground">
+			<convert type="ClockToText">Format:%H:%M</convert>
+		</widget>
+		<widget source="parent.Title" render="Label" position="30,90" size="420,200" font="Semibold;52" halign="center" valign="center" backgroundColor="LCDBackground"/>
+	</screen>
+	<screen name="MediaPlayerLCDScreen" position="0,0" size="480,320" id="1">
+		<widget name="text1" position="25,10" size="450,140" font="Regular;42" backgroundColor="LCDBackground"/>
+		<widget name="text3" position="25,160" size="450,70" font="Regular;32" backgroundColor="LCDBackground"/>
+		<widget name="text4" position="25,230" size="450,70" font="Regular;32" backgroundColor="LCDBackground"/>
+	</screen>
+	<screen name="WizardSummary" position="0,0" size="480,320" id="1">
+		<widget source="text" render="Label" position="15,10" size="450,80" font="Regular;40" transparent="1" backgroundColor="LCDBackground"/>
+		<widget source="parent.list" render="Label" position="15,100" size="450,220" font="Regular;32">
+			<convert type="StringListSelection" />
+		</widget>
+	</screen>
+</skin>

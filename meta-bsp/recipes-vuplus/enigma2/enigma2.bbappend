@@ -49,6 +49,11 @@ SRC_URI_append_vuduo4k = " \
 	file://lcd_icons_vuduo4k \
 "
 
+SRC_URI_append_vuduo4kse = " \
+	file://skin_user_vuduo4kse.xml \
+	file://lcd_icons_vuduo4kse \
+"
+
 do_install_append_vuultimo() {
         install -m 0755 ${WORKDIR}/analog.ttf ${D}/usr/share/fonts/
         install -m 0755 ${WORKDIR}/skin_user.xml ${D}/usr/share/enigma2/defaults/
@@ -84,5 +89,11 @@ do_install_append_vuduo4k() {
         install -m 0755 ${WORKDIR}/skin_user_vuduo4k.xml ${D}/usr/share/enigma2/defaults/skin_user.xml
         install -d ${D}/usr/share/enigma2/lcd_icons/
         install -m 0755 ${WORKDIR}/lcd_icons_vuduo4k/*.png ${D}/usr/share/enigma2/lcd_icons/
+}
+
+do_install_append_vuduo4kse() {
+        install -m 0755 ${WORKDIR}/skin_user_vuduo4kse.xml ${D}/usr/share/enigma2/defaults/skin_user.xml
+        install -d ${D}/usr/share/enigma2/lcd_icons/
+        install -m 0755 ${WORKDIR}/lcd_icons_vuduo4kse/*.png ${D}/usr/share/enigma2/lcd_icons/
 }
 

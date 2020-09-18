@@ -59,5 +59,6 @@ RDEPENDS_${PN}_append = "\
 	rt2870sta \
 	${@base_conditional("MACHINE", "vuultimo4k", "vuplus-wifi-util-vuultimo4k", "", d)} \
 	${@base_conditional("MACHINE", "vuduo4k", "vuplus-wifi-util-vuduo4k", "", d)} \
+	${@base_conditional("MACHINE", "vuduo4kse", "vuplus-wifi-util-vuduo4kse", "", d)} \
 "
 

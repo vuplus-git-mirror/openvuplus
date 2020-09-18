@@ -64,6 +64,7 @@ python do_package_prepend () {
   ('vuuno4kse', 'uno4kse.png', 'vu_brown.png'),
   ('vuzero4k', 'zero4k.png', 'vu_brown.png'),
   ('vuduo4k', 'duo4k.png', 'vu_brown.png'),
+  ('vuduo4kse', 'duo4kse.png', 'vu_brown.png'),
   ]
   import os
   top = '${D}${PLUGINPATH}/public/images/'
