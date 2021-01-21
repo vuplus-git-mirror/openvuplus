@@ -15,3 +15,5 @@ DEFAULTTUNE = "armv7ahf-neon"
 
 require conf/machine/include/vuplus.inc
 require conf/machine/include/arm/arch-armv7a.inc
+
+VUPLUS_FEATURES += "turbo2"
