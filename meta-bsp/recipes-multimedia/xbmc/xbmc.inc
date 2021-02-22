@@ -56,7 +56,7 @@ PV = "13.2"
 PR = "${BUILD_PR}_${GLPR}_${SRCREV}"
 
 SRC_URI = "git://code.vuplus.com/git/xbmc.git;protocol=http;branch=${BRANCH};tag=${SRCREV} \
-	http://archive.vuplus.com/download/build_support/xbmc-support_${GLPR}${GLARCH}.tar.gz;name=xbmc-support \
+	http://code.vuplus.com/download/release/support/xbmc-support_${GLPR}${GLARCH}.tar.gz;name=xbmc-support \
 "
 
 inherit autotools-brokensep gettext python-dir

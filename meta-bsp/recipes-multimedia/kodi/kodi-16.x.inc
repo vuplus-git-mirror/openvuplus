@@ -110,7 +110,7 @@ PR = "${BUILD_PR}_${GLPR}_${SRCREV}"
 
 SRC_URI = "\
 	git://code.vuplus.com/git/xbmc.git;protocol=http;branch=${BRANCH};tag=${SRCREV} \
-	http://archive.vuplus.com/download/build_support/kodi/xbmc-support_${MACHINE}_${GLPR}.tar.gz;name=xbmc-support \
+	http://code.vuplus.com/download/release/kodi/xbmc-support_${MACHINE}_${GLPR}.tar.gz;name=xbmc-support \
 "
 
 inherit autotools-brokensep autotools lib_package pkgconfig gettext python-dir

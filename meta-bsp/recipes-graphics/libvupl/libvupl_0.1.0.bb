@@ -7,7 +7,7 @@ RDEPENDS_${PN} = "libgles"
 
 PR = "${SRCDATE}.${SRCDATE_PR}"
 
-SRC_URI = "http://archive.vuplus.com/download/build_support/vuplus/${PN}-${PV}-${MACHINE}-${PR}.tar.gz"
+SRC_URI = "http://code.vuplus.com/download/release/libvupl/${PN}-${PV}-${MACHINE}-${PR}.tar.gz"
 
 require ${PN}-${MACHINE}.inc
 

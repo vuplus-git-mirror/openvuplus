@@ -15,7 +15,7 @@ PR="${@base_version_less_or_equal('PYTHON_BASEVERSION', '2.7', "${SRCDATE}.${SRC
 CHECKSUM_NAME = "${@base_version_less_or_equal('PYTHON_BASEVERSION', '2.7', '', 'name=py3', d)}"
 
 SRC_URI = " \
-    http://archive.vuplus.com/download/build_support/vuplus/enigma2-plugin-bluetoothsetup-${MACHINE}-${PR}.tar.gz;${CHECKSUM_NAME} \
+    http://code.vuplus.com/download/release/bt/enigma2-plugin-bluetoothsetup-${MACHINE}-${PR}.tar.gz;${CHECKSUM_NAME} \
 "
 
 S = "${WORKDIR}/plugin"

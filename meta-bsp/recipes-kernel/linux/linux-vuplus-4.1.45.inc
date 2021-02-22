@@ -16,7 +16,7 @@ KERNEL_CONFIG = "${MACHINE}_defconfig"
 KSRC_VER = "4.1-1.17"
 
 SRC_URI = " \
-	http://archive.vuplus.com/download/kernel/stblinux-${KSRC_VER}.tar.bz2 \
+	http://code.vuplus.com/download/release/kernel/stblinux-${KSRC_VER}.tar.bz2 \
 	file://${KERNEL_CONFIG} \
 	file://linux_dvb_adapter.patch \
 	file://linux_dvb-core.patch \

@@ -6,7 +6,7 @@ PR = "${INC_PR}.3"
 SRCDATE = "20170209"
 
 SRC_URI += "\
-	http://archive.vuplus.com/download/kernel/vmlinuz-initrd_${MACHINE}_${SRCDATE}.tar.gz \
+	http://code.vuplus.com/download/release/kernel/vmlinuz-initrd_${MACHINE}_${SRCDATE}.tar.gz \
 	file://splash_auto.bin \
 "
 

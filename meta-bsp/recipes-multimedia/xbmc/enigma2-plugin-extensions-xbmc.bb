@@ -13,7 +13,7 @@ RDEPENDS_${PN} += "xbmc"
 PROVIDES += "enigma2-plugin-extensions-xbmc"
 RPROVIDES_${PN} += "enigma2-plugin-extensions-xbmc"
 
-SRC_URI = "http://archive.vuplus.com/download/build_support/e2xbmc-plugin_${SRCDATE}.tar.gz"
+SRC_URI = "http://code.vuplus.com/download/release/support/e2xbmc-plugin_${SRCDATE}.tar.gz"
 
 S = "${WORKDIR}/plugin"
 

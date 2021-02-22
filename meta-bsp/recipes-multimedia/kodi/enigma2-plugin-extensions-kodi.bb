@@ -13,7 +13,7 @@ RDEPENDS_${PN} += "kodi"
 PROVIDES += "enigma2-plugin-extensions-kodi"
 RPROVIDES_${PN} += "enigma2-plugin-extensions-kodi"
 
-SRC_URI = "http://archive.vuplus.com/download/build_support/kodi/e2xbmc-plugin_${SRCDATE}.tar.gz"
+SRC_URI = "http://code.vuplus.com/download/release/kodi/e2xbmc-plugin_${SRCDATE}.tar.gz"
 
 S = "${WORKDIR}/plugin"
 

@@ -10,7 +10,7 @@ KV = "${VUPLUS_KERNEL_VERSION}"
 PV = "${KV}"
 PR = "${SRCDATE}.${SRCDATE_PR}"
 
-SRC_URI = "http://archive.vuplus.com/download/build_support/vuplus/vuplus-dvb-proxy-${MACHINE}-${PV}-${PR}.tar.gz "
+SRC_URI = "http://code.vuplus.com/download/release/vuplus-dvb-proxy/vuplus-dvb-proxy-${MACHINE}-${PV}-${PR}.tar.gz "
 
 S = "${WORKDIR}"
 

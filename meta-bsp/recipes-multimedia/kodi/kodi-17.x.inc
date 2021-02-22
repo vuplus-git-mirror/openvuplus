@@ -15,8 +15,8 @@ PV = "17.0"
 PR = "r1"
 
 SRC_URI = " \
-	http://archive.vuplus.com/download/build_support/kodi/kodi-${PV}-Krypton.tar.gz;name=Src \
-	http://archive.vuplus.com/download/build_support/kodi/xbmc-${PV}-Util.tar.gz;name=Util \
+	http://code.vuplus.com/download/release/kodi/kodi-${PV}-Krypton.tar.gz;name=Src \
+	http://code.vuplus.com/download/release/kodi/xbmc-${PV}-Util.tar.gz;name=Util \
 	file://xbmc-${PV}-vuplus-patch.diff \
 	"
 

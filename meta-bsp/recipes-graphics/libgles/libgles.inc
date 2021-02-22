@@ -8,7 +8,7 @@ RPROVIDES_${PN} += "libgles"
 PV="15.1"
 PR="${SRCDATE}.${SRCDATE_PR}"
 
-SRC_URI = "http://archive.vuplus.com/download/build_support/vuplus/libgles-${MACHINE}-${PV}-${PR}.tar.gz"
+SRC_URI = "http://code.vuplus.com/download/release/libgles/libgles-${MACHINE}-${PV}-${PR}.tar.gz"
 
 S = "${WORKDIR}/libgles-${MACHINE}"
 

@@ -4,7 +4,7 @@ GFX_FILE = "directfb_1.7-7_gfxdriver_${MACHINE}_${GFXPR}.tar.gz"
 
 PR .= "-vuplus4_${GFXPR}"
 
-GFX_URI ?= "http://archive.vuplus.com/download/build_support/vuplus/${GFX_FILE};name=gfxdriver "
+GFX_URI ?= "http://code.vuplus.com/download/release/directfb/${GFX_FILE};name=gfxdriver "
 
 SRC_URI += "\
 	file://vuplus-conf.patch \

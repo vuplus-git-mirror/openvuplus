@@ -10,7 +10,7 @@ KV = "${VUPLUS_KERNEL_VERSION}"
 PV = "${KV}"
 PR = "r22-${SRCDATE}"
 
-SRC_URI = "http://archive.vuplus.com/download/drivers/vuplus-dvb-modules-${MACHINE}-${PV}-${SRCDATE}.tar.gz "
+SRC_URI = "http://code.vuplus.com/download/release/vuplus-dvb-modules/vuplus-dvb-modules-${MACHINE}-${PV}-${SRCDATE}.tar.gz "
 
 S = "${WORKDIR}"
 

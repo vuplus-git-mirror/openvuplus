@@ -13,7 +13,7 @@ MODULE = "linux-3.13.5"
 
 KERNEL_CONFIG = "${@base_contains("VUPLUS_FEATURES", "dvbproxy", "${MACHINE}_defconfig_proxy", "${MACHINE}_defconfig", d)}"
 
-SRC_URI += "http://archive.vuplus.com/download/kernel/stblinux-${KV}.tar.bz2 \
+SRC_URI += "http://code.vuplus.com/download/release/kernel/stblinux-${KV}.tar.bz2 \
         file://rt2800usb_fix_warn_tx_status_timeout_to_dbg.patch \
         file://linux-tcp_output.patch \
         file://${KERNEL_CONFIG} \

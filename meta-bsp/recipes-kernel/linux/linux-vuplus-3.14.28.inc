@@ -14,7 +14,7 @@ MODULE = "linux-3.14.28"
 KERNEL_CONFIG = "${MACHINE}_defconfig"
 
 KSRC_VER = "3.14-1.8"
-SRC_URI += "http://archive.vuplus.com/download/kernel/stblinux-${KSRC_VER}.tar.bz2 \
+SRC_URI += "http://code.vuplus.com/download/release/kernel/stblinux-${KSRC_VER}.tar.bz2 \
 	file://${KERNEL_CONFIG} \
 	file://bcm_genet_disable_warn.patch \
 	file://linux_dvb-core.patch \

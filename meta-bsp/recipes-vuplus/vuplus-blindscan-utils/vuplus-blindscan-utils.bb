@@ -12,8 +12,8 @@ PV_arm = "5.1"
 PR = "r10"
 PACKAGE_ARCH = "${MACHINE_ARCH}"
 
-SRC_URI = "http://archive.vuplus.com/download/utils/vuplus-blindscan-utils-${PV}.tar.bz2"
-SRC_URI_arm = "http://archive.vuplus.com/download/utils/vuplus-blindscan-utils-${PV}_arm.tar.bz2;name=arm"
+SRC_URI = "http://code.vuplus.com/download/release/utils/vuplus-blindscan-utils-${PV}.tar.bz2"
+SRC_URI_arm = "http://code.vuplus.com/download/release/utils/vuplus-blindscan-utils-${PV}_arm.tar.bz2;name=arm"
 
 S = "${WORKDIR}/blindscan-utils"
 

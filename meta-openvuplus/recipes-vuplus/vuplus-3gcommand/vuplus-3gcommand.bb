@@ -6,7 +6,7 @@ require conf/license/license-close.inc
 PV = "1.2"
 PR = "r1"
 
-SRC_URI = "http://archive.vuplus.com/download/utils/vuplus-3gcommand-${PV}.tar.gz"
+SRC_URI = "http://code.vuplus.com/download/release/utils/vuplus-3gcommand-${PV}.tar.gz"
 
 do_install() {
 	install -d ${D}/usr/lib/enigma2/python/Plugins/SystemPlugins/3GModemManager

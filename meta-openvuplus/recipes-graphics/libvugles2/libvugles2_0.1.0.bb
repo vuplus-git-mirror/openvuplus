@@ -9,7 +9,7 @@ SRCDATE = "20150109"
 SRCDATE_PR = "r1"
 PR = "${SRCDATE}.${SRCDATE_PR}"
 
-SRC_URI = "http://archive.vuplus.com/download/build_support/vuplus/${PN}-${PV}-${PR}.tar.gz"
+SRC_URI = "http://code.vuplus.com/download/release/libvugles2/${PN}-${PV}-${PR}.tar.gz"
 
 INHIBIT_PACKAGE_STRIP = "1"
 S = "${WORKDIR}/${PN}-${PV}"
